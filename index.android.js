@@ -5,49 +5,53 @@
  */
 
 import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { AppRegistry, StyleSheet, Text, View } from 'react-native';
+import {Scene, Router, Actions, Modal} from 'react-native-router-flux';
+
+import Login from './components/Login';
+import Register from './components/Register';
+import Search from './components/Search';
+import Profile from './components/Profile';
+import Calendar from './components/Calendar';
+import Messages from './components/Messages';
+import TabView from './components/TabView';
+import TabIcon from './components/TabIcon';
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: 'transparent', justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabBarStyle: {
+    backgroundColor: '#F6F6F6',
+  },
+  tabBarSelectedItemStyle: {
+    backgroundColor: '#00A799',
+  },
+});
+
+const scenes = Actions.create(
+  <Scene key="modal" component={Modal}>
+    <Scene key="root" hideNavBar={true}>
+      <Scene key="login" component={Login} initial={true} title="Connexion"/>
+      <Scene key="register" component={Register} title="Inscription"/>
+      <Scene key="tabbar" tabBarStyle={styles.tabBarStyle} tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}>
+        <Scene key="main" tabs>
+          <Scene key="calendar" icon={TabIcon} component={Calendar} title="Calendrier"/>
+          <Scene key="search" icon={TabIcon} component={Search} title="Rechercher" initial={true}/>
+          <Scene key="profile" icon={TabIcon} component={Profile} title="Profil"/>
+          <Scene key="messages" icon={TabIcon} component={Messages} title="Messages"/>
+        </Scene>
+      </Scene>
+    </Scene>
+  </Scene>
+);
 
 export default class CouchUTC extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
+      <Router scenes={scenes}/>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('CouchUTC', () => CouchUTC);
