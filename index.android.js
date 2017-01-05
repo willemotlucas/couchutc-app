@@ -11,6 +11,7 @@ import {Scene, Router, Actions, Modal} from 'react-native-router-flux';
 import Login from './components/login/Login';
 import Register from './components/signup/Register';
 import Search from './components/search/Search';
+import SearchCity from './components/search/SearchCity';
 import Profile from './components/profile/Profile';
 import Calendar from './components/calendar/Calendar';
 import Messages from './components/chat/Messages';
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     borderTopColor: 'grey',
   },
   navigationBarStyle: {
-    backgroundColor: '#00A799',
+    backgroundColor: '#009286',
     borderBottomColor: 'transparent',
   },
   titleStyle: {
