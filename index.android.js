@@ -8,14 +8,14 @@ import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View } from 'react-native';
 import {Scene, Router, Actions, Modal} from 'react-native-router-flux';
 
-import Login from './components/Login';
-import Register from './components/Register';
-import Search from './components/Search';
-import Profile from './components/Profile';
-import Calendar from './components/Calendar';
-import Messages from './components/Messages';
-import TabView from './components/TabView';
-import TabIcon from './components/TabIcon';
+import Login from './components/login/Login';
+import Register from './components/signup/Register';
+import Search from './components/search/Search';
+import Profile from './components/profile/Profile';
+import Calendar from './components/calendar/Calendar';
+import Messages from './components/chat/Messages';
+import TabView from './components/common/TabView';
+import TabIcon from './components/common/TabIcon';
 
 const styles = StyleSheet.create({
   container: { 
