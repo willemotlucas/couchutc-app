@@ -57,6 +57,11 @@ var styles = StyleSheet.create({
 
 var monthsLocale = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 var weekDaysLocale = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+var dateOption = {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric'
+}
 
 class SearchDate extends React.Component {
 
@@ -73,13 +78,8 @@ class SearchDate extends React.Component {
     }
 
     handleDateChanged(current, previous) {
-        var dateOption = {
-            weekday: 'long',
-            month: 'short',
-            day: 'numeric'
-        }
 
-        if(current != undefined) {
+        if(current != undefined && previous == undefined) {
             this.setState({
                 startDate: current.toLocaleDateString('fr', dateOption),
                 numberOfDateSelected: this.state.numberOfDateSelected + 1
@@ -87,17 +87,21 @@ class SearchDate extends React.Component {
         }
 
         if(current != undefined && previous != undefined) {
-            if(this.state.numberOfDateSelected == 1) {
+            if(current > previous && this.state.numberOfDateSelected == 1) {
                 this.setState({
                     startDate: previous.toLocaleDateString('fr', dateOption),
                     endDate: current.toLocaleDateString('fr', dateOption),
                     numberOfDateSelected: this.state.numberOfDateSelected + 1
-                });               
+                });
             } else if (this.state.numberOfDateSelected == 2){
                 this.setState({
                     startDate: current.toLocaleDateString('fr', dateOption),
                     endDate: "Date de départ",
                     numberOfDateSelected: 1
+                });
+            } else if(this.state.numberOfDateSelected == 1 && previous > current){
+                this.setState({
+                    startDate: current.toLocaleDateString('fr', dateOption)
                 });
             }
         }
@@ -125,6 +129,7 @@ class SearchDate extends React.Component {
                     style={styles.calendarContainer}
                     monthsCount={12}
                     startFromMonday={true}
+                    startDate={new Date()}
                     width={350}
                     monthsLocale={monthsLocale}
                     weekDaysLocale={weekDaysLocale}
