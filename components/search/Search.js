@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Modal} from "react-native";
+import {View, Text, StyleSheet, Modal, Keyboard} from "react-native";
 import {Actions} from "react-native-router-flux";
 import Button from "react-native-button";
 import NavigationBar from "react-native-navbar";
@@ -9,6 +9,8 @@ import SearchCity from './SearchCity';
 import SearchDate from './SearchDate';
 import SearchNumberGuest from './SearchNumberGuest';
 
+var defaultBackgroundColor = "#009286"
+
 var styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -17,26 +19,40 @@ var styles = StyleSheet.create({
         backgroundColor: "#F5FCFF",
     },
     navBarStyle: {
-        backgroundColor: "#009286"
+        backgroundColor: defaultBackgroundColor
     },
     searchContainer: {
-        backgroundColor: "#009286",
-        marginTop: 50
+        backgroundColor: defaultBackgroundColor,
+        marginTop: 50,
     },
-    searchButton: {
-        flexDirection: 'row',
+    searchButtons: {
         margin: 10,
         height: 40,
         backgroundColor: "#00A799",
         borderRadius: 0
+    },
+    searchButtonAction: {
+        backgroundColor: defaultBackgroundColor,
+        color: 'white',
+        height: 40,
     }
 });
 
 class Search extends React.Component {
-    state = {
-        searchCityModalVisible: false,
-        searchDateModalVisible: false,
-        searchNumberGuestModalVisible: false
+
+    constructor() {
+        super();
+        this.state = {
+            searchCityModalVisible: false,
+            searchDateModalVisible: false,
+            searchNumberGuestModalVisible: false,
+            searchCity: 'Chercher une ville'
+        }
+
+        this.setSearchCityModalVisible = this.setSearchCityModalVisible.bind(this);
+        this.setSearchDateModalVisible = this.setSearchDateModalVisible.bind(this);
+        this.setSearchNumberGuestModalVisible = this.setSearchNumberGuestModalVisible.bind(this);
+        this.handleSearchCity = this.handleSearchCity.bind(this);
     }
 
     setSearchCityModalVisible(visible) {
@@ -63,12 +79,16 @@ class Search extends React.Component {
         },
     }
 
+    handleSearchCity(city) {
+        this.setState({searchCity: city});
+    }
+
     render(){
         return (
             <View style={styles.container}>
                 <Modal animationType={"slide"} visible={this.state.searchCityModalVisible} onRequestClose={() => this.setSearchCityModalVisible(false)}>
                     <NavigationBar style={styles.navBarStyle} leftButton={this.leftButtonConfig}/>
-                    <SearchCity/>
+                    <SearchCity onSearchCity={this.handleSearchCity} closeModal={this.setSearchCityModalVisible} />
                 </Modal>
                 <Modal animationType={"slide"} visible={this.state.searchDateModalVisible} onRequestClose={() => this.setSearchDateModalVisible(false)}>
                     <NavigationBar style={styles.navBarStyle} leftButton={this.leftButtonConfig}/>
@@ -79,9 +99,12 @@ class Search extends React.Component {
                     <SearchNumberGuest/>
                 </Modal>
                 <View style={styles.searchContainer}>
-                    <Icon.Button name="globe" underlayColor="#009286" backgroundColor="#009286" style={styles.searchButton} onPress={() => this.setSearchCityModalVisible(true)}>Choisir la ville</Icon.Button>
-                    <Icon.Button name="calendar-o" underlayColor="#009286" backgroundColor="#009286" style={styles.searchButton} onPress={() => this.setSearchDateModalVisible(true)}>Choisir la date</Icon.Button>
-                    <Icon.Button name="users" underlayColor="#009286" backgroundColor="#009286" style={styles.searchButton} onPress={() => this.setSearchNumberGuestModalVisible(true)}>Choisir le nombre de voyageurs</Icon.Button>
+                    <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
+                    <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>Choisir la date</Icon.Button>
+                    <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>Choisir le nombre de voyageurs</Icon.Button>
+                </View>
+                <View>
+                    <Button style={[styles.searchButtonAction, {bottom: this.state.btnLocation}]}>CHERCHER</Button>
                 </View>
             </View>
         );
