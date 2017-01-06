@@ -133,7 +133,7 @@ class Requests extends React.Component {
         if (!rowData.received) {
             receivedPicture = <MaterialIcons name='call-made' size={40} style={{color: '#00A799', position: 'absolute', right: 10, top: 15}}/>
         } else {
-            receivedPicture = <MaterialIcons name='call-received' size={40} style={{color: 'red', position: 'absolute', right: 10, top: 15}}/>;
+            receivedPicture = <MaterialIcons name='call-received' size={40} style={{color: '#F94351', position: 'absolute', right: 10, top: 15}}/>;
         }
         return (
               <View>
@@ -207,7 +207,7 @@ class Requests extends React.Component {
                             <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}}>
                                 Demander plus d'informations
                             </Button>
-                            <Button style={{backgroundColor: 'red', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}}>
+                            <Button style={{backgroundColor: '#F94351', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}}>
                                 Refuser la demande
                             </Button>
                         </View>
