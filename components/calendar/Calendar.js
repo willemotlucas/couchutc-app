@@ -1,5 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet} from "react-native";
+import {
+    View, 
+    Text, 
+    StyleSheet,
+    ListView,
+    TouchableHighlight,
+    Image
+} from "react-native";
+
 import {Actions} from "react-native-router-flux";
 import CalendarComponent from 'react-native-calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,6 +26,23 @@ var styles = StyleSheet.create({
         height: 1,
         backgroundColor: '#ccc'
     },
+    hostingRow: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        paddingTop: 5, 
+        paddingBottom: 5
+    },
+    inlineBlocks: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    icon: {
+        marginRight: 10
+    },
+    chevronRight: {
+        position: 'relative', 
+        left: 130
+    }
 });
 
 var calendarStyles = StyleSheet.create({
@@ -53,13 +78,60 @@ class Calendar extends React.Component {
         super(props);
         var dates = [];
         var currentDate = new Date().toJSON().slice(0,10);
+        var dataSource = new ListView.DataSource(
+            {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url}
+        );
         this.state = {
             currentDate: currentDate,
+            dataSource: dataSource.cloneWithRows({})
         }
     }
 
     onDateSelect(date) {
+        var dataSource = new ListView.DataSource(
+            {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url}
+        );
+        this.setState({
+            dataSource: dataSource.cloneWithRows([{avatar: '', name: 'Mathieu Dublond', startingDate: '2017-01-12', endingDate: '2017-01-15', nbPersons: '2'}])
+        });
+    }
 
+    renderRow(rowData, sectionID, rowID) {
+        var avatar = null;
+        if (rowData.avatar == '') {
+            avatar = <Icon name='user' size={50} style={{marginLeft: 15, marginRight: 15}}/>
+        } else {
+            avatar = <Image source={{uri: '././resources/users.png'}}/>
+        }
+        return (
+            <View>
+                <View>
+                  <TouchableHighlight
+                  underlayColor='#dddddd'>
+                    <View style={styles.hostingRow}>
+                        {avatar}
+                        <View>
+                            <Text style={{fontWeight: 'bold'}}>{rowData.name}</Text>
+                            <View style={styles.inlineBlocks}>
+                                <Icon name='calendar' size={15} style={styles.icon}/>
+                                <Text
+                                numberOfLines={1}>{rowData.startingDate} au {rowData.endingDate}</Text>
+                            </View>
+                            <View style={styles.inlineBlocks}>
+                                <Icon name='users' size={15} style={styles.icon}/>
+                                <Text
+                                numberOfLines={1}>{rowData.nbPersons} voyageurs</Text>
+                            </View>
+                        </View>
+                        <View>
+                        <Icon name='angle-right'size={45} style={styles.chevronRight}/>
+                        </View>
+                    </View>
+                  </TouchableHighlight>
+                </View>
+                <View style={styles.separator}/>
+            </View>
+        );
     }
 
     render(){
@@ -87,6 +159,10 @@ class Calendar extends React.Component {
                 weekStart={0} // Day on which week starts 0 - Sunday, 1 - Monday, 2 - Tuesday, etc, Default: 1
                 />
                 <View style={styles.separator}/>
+                <ListView
+                enableEmptySections= {true}
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}/>
             </View>
         );
     }
