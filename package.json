@@ -11,6 +11,7 @@
     "react": "15.4.1",
     "react-native": "0.39.2",
     "react-native-button": "^1.7.1",
+    "react-native-day-picker": "^1.1.6",
     "react-native-navbar": "^1.6.0",
     "react-native-router-flux": "^3.37.0",
     "react-native-textinput-effects": "^0.3.0",

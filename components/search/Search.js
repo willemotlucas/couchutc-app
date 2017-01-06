@@ -46,13 +46,17 @@ class Search extends React.Component {
             searchCityModalVisible: false,
             searchDateModalVisible: false,
             searchNumberGuestModalVisible: false,
-            searchCity: 'Chercher une ville'
+            searchCity: 'Chercher une ville',
+            pickedDate: 'Choisir une date',
+            pickedStartDate: '',
+            pickedEndDate: ''
         }
 
         this.setSearchCityModalVisible = this.setSearchCityModalVisible.bind(this);
         this.setSearchDateModalVisible = this.setSearchDateModalVisible.bind(this);
         this.setSearchNumberGuestModalVisible = this.setSearchNumberGuestModalVisible.bind(this);
         this.handleSearchCity = this.handleSearchCity.bind(this);
+        this.handlePickedDate = this.handlePickedDate.bind(this);
     }
 
     setSearchCityModalVisible(visible) {
@@ -83,6 +87,17 @@ class Search extends React.Component {
         this.setState({searchCity: city});
     }
 
+    handlePickedDate(startDate, endDate) {
+        var dateOptions = {day: 'numeric', month: 'short'};
+        var pickedDate = startDate.toLocaleDateString('fr', dateOptions) + ' - ' + endDate.toLocaleDateString('fr', dateOptions);
+
+        this.setState({
+            pickedStartDate: startDate,
+            pickedEndDate: endDate,
+            pickedDate: pickedDate
+        })
+    }
+
     render(){
         return (
             <View style={styles.container}>
@@ -92,7 +107,7 @@ class Search extends React.Component {
                 </Modal>
                 <Modal animationType={"slide"} visible={this.state.searchDateModalVisible} onRequestClose={() => this.setSearchDateModalVisible(false)}>
                     <NavigationBar style={styles.navBarStyle} leftButton={this.leftButtonConfig}/>
-                    <SearchDate/>
+                    <SearchDate onPickDate={this.handlePickedDate} closeModal={this.setSearchDateModalVisible}/>
                 </Modal>
                 <Modal animationType={"slide"} visible={this.state.searchNumberGuestModalVisible} onRequestClose={() => this.setSearchNumberGuestModalVisible(false)}>
                     <NavigationBar style={styles.navBarStyle} leftButton={this.leftButtonConfig}/>
@@ -100,7 +115,7 @@ class Search extends React.Component {
                 </Modal>
                 <View style={styles.searchContainer}>
                     <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
-                    <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>Choisir la date</Icon.Button>
+                    <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>{this.state.pickedDate}</Icon.Button>
                     <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>Choisir le nombre de voyageurs</Icon.Button>
                 </View>
                 <View>
