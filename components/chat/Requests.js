@@ -12,6 +12,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Button from 'apsl-react-native-button'
 
+import Realm from 'realm';
+import User from '../../models/User';
+import HostingRequest from '../../models/HostingRequest';
+
 var styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -20,9 +24,7 @@ var styles = StyleSheet.create({
     },
     modal: {
         flexDirection: 'row',
-        marginTop: 15
-    },
-    modal3: {
+        marginTop: 15,
         height: 475,
         width: 350
     },
@@ -56,10 +58,12 @@ var styles = StyleSheet.create({
     borderedText: {
         marginTop: 5,
         marginBottom: 15,
-        borderWidth: 0.3,
+        borderWidth: 0.5,
         padding: 5,
         borderColor: 'grey',
-        borderRadius: 5
+        borderRadius: 5,
+        width: 310,
+        minHeight: 100
     },
     buttons: {
         position: 'absolute', 
@@ -71,24 +75,15 @@ var styles = StyleSheet.create({
     }
 });
 
-var requests = {
-    1: {
-        avatar: '',
-        name: 'Mathieu Dublond',
-        startingDate: '2017-01-01',
-        endingDate: '2017-01-05',
-        nbPersons: 2,
-        received: true
-    },
-    2: {
-        avatar: '',
-        name: 'Paul Jacquit',
-        startingDate: '2017-02-01',
-        endingDate: '2017-02-05',
-        nbPersons: 1,
-        received: false
-    }
-};
+var monthNames = [
+    "Jan", "Fev", "Mar",
+    "Avr", "Mai", "Juin", "Juil",
+    "Au", "Sept", "Oct",
+    "Nov", "Dec"
+];
+
+
+let realm = new Realm({schema: [User, HostingRequest]});
 
 const onButtonPress = () => {
     Alert.alert('Button has been pressed!');
@@ -97,15 +92,32 @@ const onButtonPress = () => {
 class Requests extends React.Component {
     constructor(props) {
         super(props);
+
+        var dataForList = [];
+        let requests = realm.objects('HostingRequest');
+        Object.keys(requests).forEach(function(key) {
+            let users = realm.objects('User');
+            let guests = users.filtered(`id = ${requests[key].guest_id}`);
+
+            dataForList.push({
+                request: requests[key],
+                user: guests[0]
+            });
+        });
+
         var dataSource = new ListView.DataSource(
           {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
         this.state = {
-            dataSource: dataSource.cloneWithRows(requests),
-            avatar: '',
-            name: '',
+            dataSource: dataSource.cloneWithRows(dataForList),
+            firstName: '',
+            lastName: '',
+            age: '',
             startingDate: '',
+            startingHour: '',
             endingDate: '',
-            nbPersons: 0,
+            endingHour: '',
+            nbGuests: '',
+            message: '',
             received: true,
             isOpen: false,
             isDisabled: false,
@@ -114,7 +126,32 @@ class Requests extends React.Component {
         };
     }
 
-    openRequestDetails() {
+    onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message) {
+        //format minutes
+        var startingMin = null;
+        if (startingDate.getMinutes() < 10) {
+            startingMin = "0" + startingDate.getMinutes();
+        } else {
+            startingMin = startingDate.getMinutes();
+        }
+        var endingMin = null;
+        if (endingDate.getMinutes() < 10) {
+            endingMin = "0" + endingDate.getMinutes();
+        } else {
+            endingMin = endingDate.getMinutes();
+        }
+        this.setState({
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            startingDate: startingDate.getDate() + ' ' + monthNames[startingDate.getMonth()],
+            startingHour: startingDate.getHours() + 'h' + startingMin,
+            endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
+            endingHour: endingDate.getHours() + 'h' + endingMin,
+            nbGuests: nbGuests,
+            message: message
+        });
+
         this.refs.detailsRequest.open();
     }
 
@@ -124,7 +161,7 @@ class Requests extends React.Component {
 
     renderRow(rowData, sectionID, rowID) {
         var avatar = null;
-        if (rowData.avatar == '') {
+        if (rowData['user'].profilePicture == null) {
             avatar = <Icon name="user" size={50} style={{marginLeft: 15, marginRight: 15}}/>
         } else {
             //Add picture
@@ -138,19 +175,28 @@ class Requests extends React.Component {
         return (
               <View>
                 <View style={styles.row}>
-                    <TouchableHighlight onPress= {() => this.openRequestDetails()}
+                    <TouchableHighlight
+                    onPress={() => this.onHostingRequestPressed(
+                    rowData['user'].firstName,
+                    rowData['user'].lastName,
+                    rowData['user'].age(),
+                    rowData['request'].startingDate,
+                    rowData['request'].endingDate,
+                    rowData['request'].numberOfGuest,
+                    rowData['request'].message
+                    )}
                     underlayColor='#dddddd'>
                         <View style={styles.requestRow}>
                             {avatar}
                             <View>
-                                <Text>{rowData.name}</Text>
+                                <Text>{rowData['user'].firstName} {rowData['user'].lastName}</Text>
                                 <View style={styles.inlineBlocks}>
                                     <Icon name="calendar" size={15} style={styles.icon}/>
-                                    <Text>{rowData.startingDate} - {rowData.endingDate}</Text>
+                                    <Text>{rowData['request'].startingDate.getDate() + ' ' + monthNames[rowData['request'].startingDate.getMonth()]} au {rowData['request'].endingDate.getDate() + ' ' + monthNames[rowData['request'].endingDate.getMonth()]}</Text>
                                 </View>
                                 <View style={styles.inlineBlocks}>
                                     <Icon name="users" size={15} style={styles.icon}/>
-                                    <Text>{rowData.nbPersons} voyageurs</Text>
+                                    <Text>{rowData['request'].numberOfGuest} voyageurs</Text>
                                 </View>
                             </View>
                             {receivedPicture}
@@ -168,7 +214,7 @@ class Requests extends React.Component {
                 <ListView
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}/>
-                <Modal style={[styles.modal, styles.modal3]} position={"top"} ref={"detailsRequest"} isDisabled={this.state.isDisabled}>
+                <Modal style={styles.modal} position={"top"} ref={"detailsRequest"} isDisabled={this.state.isDisabled}>
                     <View style={[styles.inlineBlocks, {position: 'absolute', top: 0}]}>
                         <Icon name="close" size={30} style={[styles.icon, {marginLeft: 10, marginRight: 40}]} onPress={() => this.closeRequestDetails()}/>
                         <Text style={{fontSize: 20}}>Détails de la demande</Text>
@@ -177,27 +223,25 @@ class Requests extends React.Component {
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="user" size={35} style={styles.icon}/>
                             <View>
-                                <Text style={{fontSize: 18}}>Mathieu Dublond</Text>
-                                <Text>21 ans </Text>
+                                <Text style={{fontSize: 18}}>{this.state.firstName} {this.state.lastName}</Text>
+                                <Text>{this.state.age} ans </Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="calendar" size={30}  style={styles.icon}/>
                             <View>
-                                <Text>Arrivée :</Text>
-                                <Text>Départ :</Text>
+                                <Text>Arrivée : {this.state.startingDate} vers {this.state.startingHour}</Text>
+                                <Text>Départ : {this.state.endingDate} vers {this.state.endingHour}</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="users" size={28} style={styles.icon} />
-                            <Text>2 voyageurs</Text>
+                            <Text>{this.state.nbGuests} voyageurs</Text>
                         </View>
                         <View>
-                            <Text>Message de Mathieu</Text>
+                            <Text>Message de {this.state.firstName}</Text>
                             <Text style={styles.borderedText} numberOfLines={6}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et 
-                            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
-                            commodo consequat.</Text>
+                            {this.state.message}</Text>
                         </View>
                     </View>
                     <View style={styles.buttons}>
