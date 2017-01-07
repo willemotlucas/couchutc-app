@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Realm from 'realm';
 import User from '../../models/User';
+import Home from '../../models/Home';
 
 var styles = StyleSheet.create({
     resultsContainer: {
@@ -34,7 +35,7 @@ var styles = StyleSheet.create({
     }
 });
 
-let realm = new Realm({schema: [User]});
+let realm = new Realm({schema: [User, Home]});
 
 class SearchResults extends React.Component {
 
@@ -55,8 +56,8 @@ class SearchResults extends React.Component {
                     <Image style={{width: 365, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}>
                         <Text style={styles.title}>{rowData.firstName} {rowData.lastName}, {rowData.age()} ans</Text>
                         <View style={styles.content}>
-                            <Text style={styles.contentText}><Icon name="globe" size={15}/> Amsterdam, Pays-Bas</Text>
-                            <Text style={styles.contentText}><Icon name="bed" size={15}/> Pièce public</Text>
+                            <Text style={styles.contentText}><Icon name="globe" size={15}/> {rowData.home.city}, {rowData.home.country}</Text>
+                            <Text style={styles.contentText}><Icon name="bed" size={15}/> {rowData.home.sleepingAccomodation}</Text>
                         </View>
                     </Image>
                 </CardImage>

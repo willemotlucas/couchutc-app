@@ -5,6 +5,7 @@ import Button from 'react-native-button'
 
 import Realm from 'realm';
 import User from '../../models/User';
+import Home from '../../models/Home';
 
 const styles = StyleSheet.create({
     container: {
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
 
 export default class extends React.Component {
     writeData() {
-        let realm = new Realm({schema: [User]});
+        let realm = new Realm({schema: [User, Home]});
         let users = realm.objects('User');
 
         if(users.length == 0) {
@@ -46,7 +47,17 @@ export default class extends React.Component {
                 speciality: 'Génie Informatique',
                 phoneNumber: '0661065110',
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                home: {
+                    id: 1,
+                    country: 'France',
+                    city: 'Blois',
+                    propertyType: 'Appartement',
+                    sleepingAccomodation: 'Pièce public',
+                    maxGuestNumber: 2,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }
               });
 
             realm.create('User', {
@@ -62,7 +73,17 @@ export default class extends React.Component {
                 speciality: 'Génie Informatique',
                 phoneNumber: '0661065110',
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                home: {
+                id: 2,
+                    country: 'Canada',
+                    city: 'Montréal',
+                    propertyType: 'Appartement',
+                    sleepingAccomodation: 'Pièce public',
+                    maxGuestNumber: 2,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }
               });
 
             realm.create('User', {
@@ -78,7 +99,17 @@ export default class extends React.Component {
                 speciality: 'Génie Informatique',
                 phoneNumber: '0661065110',
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                home: {
+                id: 3,
+                    country: 'France',
+                    city: 'Rennes',
+                    propertyType: 'Maison',
+                    sleepingAccomodation: 'Chambre privée',
+                    maxGuestNumber: 2,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }
               });
             });
         }

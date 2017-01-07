@@ -16,7 +16,8 @@ const UserSchema = {
     speciality: 'string',
     phoneNumber: 'string',
     createdAt: 'date',
-    updatedAt: 'date'
+    updatedAt: 'date',
+    home: 'Home',
   }
 };
 
