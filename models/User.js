@@ -17,7 +17,7 @@ const UserSchema = {
     phoneNumber: 'string',
     createdAt: 'date',
     updatedAt: 'date',
-    home: 'Home',
+    home: 'Home'
   }
 };
 

@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Realm from 'realm';
 import User from '../../models/User';
 import Home from '../../models/Home';
+import HostingRequest from '../../models/HostingRequest';
 
 var styles = StyleSheet.create({
     resultsContainer: {
@@ -35,7 +36,7 @@ var styles = StyleSheet.create({
     }
 });
 
-let realm = new Realm({schema: [User, Home]});
+let realm = new Realm({schema: [User, Home, HostingRequest]});
 
 class SearchResults extends React.Component {
 
