@@ -11,6 +11,7 @@ import {
 import {Actions} from "react-native-router-flux";
 import CalendarComponent from 'react-native-calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-modalbox';
 
 import Realm from 'realm';
 import User from '../../models/User';
@@ -47,7 +48,32 @@ var styles = StyleSheet.create({
     chevronRight: {
         position: 'relative', 
         left: 130
-    }
+    },
+    modal: {
+        flexDirection: 'row',
+        marginTop: 15,
+        height: 350,
+        width: 350
+    },
+    modalInnerContainer: {
+        backgroundColor: '#fff', 
+        marginTop: 50,
+        paddingLeft: 20,
+        paddingRight: 20,
+        borderRadius: 10,
+    },
+    borderedText: {
+        marginTop: 10,
+        borderWidth: 0.5,
+        padding: 5,
+        borderColor: 'grey',
+        borderRadius: 5,
+        minWidth: 310,
+        minHeight: 120
+    },
+    lineDetails: {
+        marginBottom: 8
+    },
 });
 
 var calendarStyles = StyleSheet.create({
@@ -111,7 +137,21 @@ class Calendar extends React.Component {
             currentDate: currentDate,
             eventDates: eventDates,
             dataSource: dataSource.cloneWithRows({}),
-            hostingRequests: hostingRequests
+            hostingRequests: hostingRequests,
+            received: true,
+            isOpen: false,
+            isDisabled: false,
+            swipeToClose: true,
+            sliderValue: 0.3,
+            firstName: '',
+            lastName: '',
+            age: '',
+            startingDate: '',
+            startingHour: '',
+            endingDate: '',
+            endingHour: '',
+            nbGuests: '',
+            message: ''
         }
     }
 
@@ -134,9 +174,6 @@ class Calendar extends React.Component {
             }
         });
         
-
-        console.log(requestsForSelectedDate);
-
         var dataSource = new ListView.DataSource(
             {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url}
         );
@@ -145,8 +182,54 @@ class Calendar extends React.Component {
         });
     }
 
-    onHostingRequestPressed() {
-        alert('coucou');
+    onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message) {
+        var monthNames = [
+            "Jan", "Fev", "Mar",
+            "Avr", "Mai", "Juin", "Juil",
+            "Au", "Sept", "Oct",
+            "Nov", "Dec"
+        ];
+
+        //format minutes
+        var startingMin = null;
+        if (startingDate.getMinutes() < 10) {
+            startingMin = "0" + startingDate.getMinutes();
+        } else {
+            startingMin = startingDate.getMinutes();
+        }
+        var endingMin = null;
+        if (endingDate.getMinutes() < 10) {
+            endingMin = "0" + endingDate.getMinutes();
+        } else {
+            endingMin = endingDate.getMinutes();
+        }
+        this.setState({
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            startingDate: startingDate.getDate() + ' ' + monthNames[startingDate.getMonth()],
+            startingHour: startingDate.getHours() + 'h' + startingMin,
+            endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
+            endingHour: endingDate.getHours() + 'h' + endingMin,
+            nbGuests: nbGuests,
+            message: message
+        });
+        this.refs.detailsRequest.open();
+    }
+
+    closeRequestDetails() {
+        this.setState({
+            firstName: '',
+            lastName: '',
+            age: '',
+            startingDate: '',
+            startingHour: '',
+            endingDate: '',
+            endingHour: '',
+            nbGuests: '',
+            message: ''
+        });
+        this.refs.detailsRequest.close();
     }
 
     renderRow(rowData, sectionID, rowID) {
@@ -161,7 +244,15 @@ class Calendar extends React.Component {
                 <View>
                   <TouchableHighlight
                   underlayColor='#dddddd'
-                    onPress={() => this.onHostingRequestPressed()}>
+                    onPress={() => this.onHostingRequestPressed(
+                        rowData['guest'].firstName,
+                        rowData['guest'].lastName,
+                        rowData['guest'].age,
+                        rowData['request'].startingDate,
+                        rowData['request'].endingDate,
+                        rowData['request'].numberOfGuest,
+                        rowData['request'].message
+                        )}>
                     <View style={styles.hostingRow}>
                         {avatar}
                         <View>
@@ -217,6 +308,37 @@ class Calendar extends React.Component {
                 enableEmptySections= {true}
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}/>
+                <Modal style={[styles.modal]} position={"center"} ref={"detailsRequest"} isDisabled={this.state.isDisabled}>
+                    <View style={[styles.inlineBlocks, {position: 'absolute', top: 0}]}>
+                        <Icon name="close" size={30} style={[styles.icon, {marginLeft: 10, marginRight: 40}]} onPress={() => this.closeRequestDetails()}/>
+                        <Text style={{fontSize: 20}}>Détails de la demande</Text>
+                    </View>
+                    <View style={styles.modalInnerContainer}>
+                        <View style={[styles.inlineBlocks, styles.lineDetails]}>
+                            <Icon name="user" size={35} style={styles.icon}/>
+                            <View>
+                                <Text style={{fontSize: 18}}>{this.state.firstName} {this.state.lastName}</Text>
+                                <Text>21 ans </Text>
+                            </View>
+                        </View>
+                        <View style={[styles.inlineBlocks, styles.lineDetails]}>
+                            <Icon name="calendar" size={30}  style={styles.icon}/>
+                            <View>
+                                <Text>Arrivée : {this.state.startingDate} vers {this.state.startingHour}</Text>
+                                <Text>Départ : {this.state.endingDate} vers {this.state.endingHour}</Text>
+                            </View>
+                        </View>
+                        <View style={[styles.inlineBlocks, styles.lineDetails]}>
+                            <Icon name="users" size={28} style={styles.icon} />
+                            <Text>{this.state.nbGuests} voyageurs</Text>
+                        </View>
+                        <View>
+                            <Text>Message de {this.state.firstName}</Text>
+                            <Text style={styles.borderedText} numberOfLines={6}>
+                            {this.state.message}</Text>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         );
     }
