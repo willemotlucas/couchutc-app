@@ -107,6 +107,13 @@ var calendarStyles = StyleSheet.create({
     },
 });
 
+var monthNames = [
+    "Jan", "Fev", "Mar",
+    "Avr", "Mai", "Juin", "Juil",
+    "Au", "Sept", "Oct",
+    "Nov", "Dec"
+];
+
 let realm = new Realm({schema: [User, HostingRequest]});
 
 class Calendar extends React.Component {
@@ -183,13 +190,6 @@ class Calendar extends React.Component {
     }
 
     onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message) {
-        var monthNames = [
-            "Jan", "Fev", "Mar",
-            "Avr", "Mai", "Juin", "Juil",
-            "Au", "Sept", "Oct",
-            "Nov", "Dec"
-        ];
-
         //format minutes
         var startingMin = null;
         if (startingDate.getMinutes() < 10) {
@@ -260,7 +260,7 @@ class Calendar extends React.Component {
                             <View style={styles.inlineBlocks}>
                                 <Icon name='calendar' size={15} style={styles.icon}/>
                                 <Text
-                                numberOfLines={1}>{rowData['request'].startingDate.toJSON().slice(0,10)} au {rowData['request'].endingDate.toJSON().slice(0,10)}</Text>
+                                numberOfLines={1}>{rowData['request'].startingDate.getDate() + ' ' + monthNames[rowData['request'].startingDate.getMonth()]} au {rowData['request'].endingDate.getDate() + ' ' + monthNames[rowData['request'].endingDate.getMonth()]}</Text>
                             </View>
                             <View style={styles.inlineBlocks}>
                                 <Icon name='users' size={15} style={styles.icon}/>
