@@ -12,6 +12,11 @@ import {Actions} from "react-native-router-flux";
 import CalendarComponent from 'react-native-calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Realm from 'realm';
+import User from '../../models/User';
+import Home from '../../models/Home';
+import HostingRequest from '../../models/HostingRequest';
+
 var styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -71,7 +76,12 @@ var calendarStyles = StyleSheet.create({
       borderTopWidth: 0.5,
       borderTopColor: '#CCC',
     },
+    eventIndicator: {
+        backgroundColor: '#999'
+    },
 });
+
+let realm = new Realm({schema: [User, HostingRequest]});
 
 class Calendar extends React.Component {
     constructor(props) {
@@ -81,24 +91,67 @@ class Calendar extends React.Component {
         var dataSource = new ListView.DataSource(
             {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url}
         );
+
+        var eventDates = [];
+        let hostingRequests = realm.objects('HostingRequest');
+        //let results = hostingRequests.filtered(`host_id = ${}`);
+
+        Object.keys(hostingRequests).forEach(function(key) {
+            var startingDate = hostingRequests[key].startingDate;
+            var endingDate = hostingRequests[key].endingDate;
+            var currentDate = new Date(startingDate.getTime());
+
+            while (currentDate <= endingDate) {
+                eventDates.push(new Date(currentDate).toJSON().slice(0,10));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        });
+
         this.state = {
             currentDate: currentDate,
-            dataSource: dataSource.cloneWithRows({})
+            eventDates: eventDates,
+            dataSource: dataSource.cloneWithRows({}),
+            hostingRequests: hostingRequests
         }
     }
 
     onDateSelect(date) {
+        var requests = this.state.hostingRequests;
+        var requestsForSelectedDate = [];
+        var selectedDate = new Date(date).toJSON().slice(0,10);
+
+        //get all hosting requests for selected date
+        Object.keys(requests).forEach(function(key) {
+            if (requests[key].startingDate.toJSON().slice(0,10) <= selectedDate && 
+            requests[key].endingDate.toJSON().slice(0,10) >= selectedDate) {
+                let users = realm.objects('User');
+                let guest = users.filtered(`id = ${requests[key].guest_id}`);
+                //build array to display list
+                requestsForSelectedDate.push({
+                    request: requests[key],
+                    guest: guest[0]
+                });     
+            }
+        });
+        
+
+        console.log(requestsForSelectedDate);
+
         var dataSource = new ListView.DataSource(
             {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url}
         );
         this.setState({
-            dataSource: dataSource.cloneWithRows([{avatar: '', name: 'Mathieu Dublond', startingDate: '2017-01-12', endingDate: '2017-01-15', nbPersons: '2'}])
+            dataSource: dataSource.cloneWithRows(requestsForSelectedDate)
         });
+    }
+
+    onHostingRequestPressed() {
+        alert('coucou');
     }
 
     renderRow(rowData, sectionID, rowID) {
         var avatar = null;
-        if (rowData.avatar == '') {
+        if (rowData['guest'].profilePicture == null) {
             avatar = <Icon name='user' size={50} style={{marginLeft: 15, marginRight: 15}}/>
         } else {
             avatar = <Image source={{uri: '././resources/users.png'}}/>
@@ -107,20 +160,21 @@ class Calendar extends React.Component {
             <View>
                 <View>
                   <TouchableHighlight
-                  underlayColor='#dddddd'>
+                  underlayColor='#dddddd'
+                    onPress={() => this.onHostingRequestPressed()}>
                     <View style={styles.hostingRow}>
                         {avatar}
                         <View>
-                            <Text style={{fontWeight: 'bold'}}>{rowData.name}</Text>
+                            <Text style={{fontWeight: 'bold'}}>{rowData['guest'].firstName} {rowData['guest'].lastName}</Text>
                             <View style={styles.inlineBlocks}>
                                 <Icon name='calendar' size={15} style={styles.icon}/>
                                 <Text
-                                numberOfLines={1}>{rowData.startingDate} au {rowData.endingDate}</Text>
+                                numberOfLines={1}>{rowData['request'].startingDate.toJSON().slice(0,10)} au {rowData['request'].endingDate.toJSON().slice(0,10)}</Text>
                             </View>
                             <View style={styles.inlineBlocks}>
                                 <Icon name='users' size={15} style={styles.icon}/>
                                 <Text
-                                numberOfLines={1}>{rowData.nbPersons} voyageurs</Text>
+                                numberOfLines={1}>{rowData['request'].numberOfGuest} voyageurs</Text>
                             </View>
                         </View>
                         <View>
@@ -140,8 +194,8 @@ class Calendar extends React.Component {
                 <CalendarComponent
                 customStyle={calendarStyles} // Customize any pre-defined styles
                 dayHeadings={['S', 'M', 'T', 'W', 'T', 'F', 'S']}               // Default: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-                //eventDates={}       // Optional array of moment() parseable dates that will show an event indicator
-                events={[{date:'2017-01-01'}]}// Optional array of event objects with a date property and custom styles for the event indicator
+                eventDates={this.state.eventDates}       // Optional array of moment() parseable dates that will show an event indicator
+                events={this.state.eventDates}// Optional array of event objects with a date property and custom styles for the event indicator
                 monthNames={['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']}// Defaults to english names of months
                 nextButtonText={<Icon name='chevron-right' size={20}/>}           // Text for next button. Default: 'Next'
                 onDateSelect={(date) => this.onDateSelect(date)} // Callback after date selection

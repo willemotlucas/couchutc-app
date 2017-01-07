@@ -12,8 +12,8 @@ const FakeData = {
 		const hostingRequests = [
 			{
 	        	id: 1,
-	        	startingDate: new Date('2016-01-14'),
-			    endingDate: new Date('2016-01-15'),
+	        	startingDate: new Date('2017-01-14'),
+			    endingDate: new Date('2017-01-15'),
 			    numberOfGuest: 1,
 			    message: 'Le petit message de test',
 			    createdAt: new Date(),
@@ -23,8 +23,8 @@ const FakeData = {
 	    	},
 	    	{
 	    		id: 2,
-			    startingDate: new Date('2016-01-20'),
-			    endingDate: new Date('2016-01-22'),
+			    startingDate: new Date('2017-01-20'),
+			    endingDate: new Date('2017-01-22'),
 			    numberOfGuest: 1,
 			    message: 'Le petit message de test',
 			    createdAt: new Date(),
