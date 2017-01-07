@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Modal, Keyboard} from "react-native";
+import {View, Text, StyleSheet, Modal, Keyboard, LayoutAnimation} from "react-native";
 import {Actions} from "react-native-router-flux";
 import Button from "react-native-button";
 import NavigationBar from "react-native-navbar";
@@ -35,6 +35,9 @@ var styles = StyleSheet.create({
         backgroundColor: defaultBackgroundColor,
         color: 'white',
         height: 40,
+    },
+    searchText : {
+        color: 'white'
     }
 });
 
@@ -51,7 +54,8 @@ class Search extends React.Component {
             pickedStartDate: null,
             pickedEndDate: null,
             numberOfGuestString: '1 voyageur',
-            numberOfGuest: 1
+            numberOfGuest: 1,
+            renderResults: false
         }
 
         this.setSearchCityModalVisible = this.setSearchCityModalVisible.bind(this);
@@ -60,6 +64,9 @@ class Search extends React.Component {
         this.handleSearchCity = this.handleSearchCity.bind(this);
         this.handlePickedDate = this.handlePickedDate.bind(this);
         this.handleNumberOfGuest = this.handleNumberOfGuest.bind(this);
+        this.renderSearchView = this.renderSearchView.bind(this);
+        this.toggleRenderResults = this.toggleRenderResults.bind(this);
+        this.onSearchButtonPress = this.onSearchButtonPress.bind(this);
     }
 
     setSearchCityModalVisible(visible) {
@@ -115,6 +122,46 @@ class Search extends React.Component {
             });
     }
 
+    onSearchButtonPress() {
+        if(this.state.searchCity != 'Chercher une ville' && this.state.pickedStartDate != null && this.state.pickedEndDate != null){
+            this.toggleRenderResults();
+        }
+    }
+
+    toggleRenderResults() {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+        // if renderResults == true, that means we want to close search container and render search results
+        this.setState({renderResults: !this.state.renderResults});
+    }
+
+    renderSearchButton() {
+        if(!this.state.renderResults){
+            return (
+                <View>
+                    <Button style={[styles.searchButtonAction, {bottom: this.state.btnLocation}]} onPress={this.onSearchButtonPress}>CHERCHER</Button>
+                </View>
+            )
+        }
+    }
+
+    renderSearchView() {
+        if(this.state.renderResults){
+            return (
+                <View style={styles.searchContainer}>
+                    <Icon.Button name="search" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={this.toggleRenderResults}><Text style={styles.searchText}>{this.state.searchCity} - {this.state.pickedDate} - {this.state.numberOfGuest}</Text></Icon.Button>
+                </View>
+            )
+        } else {
+            return (
+                <View style={styles.searchContainer}>
+                    <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
+                    <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>{this.state.pickedDate}</Icon.Button>
+                    <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>{this.state.numberOfGuestString}</Icon.Button>
+                </View>
+            )
+        }
+    }
+
     render(){
         return (
             <View style={styles.container}>
@@ -130,14 +177,10 @@ class Search extends React.Component {
                     <NavigationBar style={styles.navBarStyle} leftButton={this.leftButtonConfig}/>
                     <SearchNumberGuest numberOfGuest={this.state.numberOfGuest} onPickNumberOfGuest={this.handleNumberOfGuest} closeModal={this.setSearchNumberGuestModalVisible}/>
                 </Modal>
-                <View style={styles.searchContainer}>
-                    <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
-                    <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>{this.state.pickedDate}</Icon.Button>
-                    <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>{this.state.numberOfGuestString}</Icon.Button>
-                </View>
-                <View>
-                    <Button style={[styles.searchButtonAction, {bottom: this.state.btnLocation}]}>CHERCHER</Button>
-                </View>
+
+                {this.renderSearchView()}
+
+                {this.renderSearchButton()}
             </View>
         );
     }
