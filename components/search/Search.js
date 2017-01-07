@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchCity from './SearchCity';
 import SearchDate from './SearchDate';
 import SearchNumberGuest from './SearchNumberGuest';
+import SearchResults from './SearchResults';
 
 var defaultBackgroundColor = "#009286"
 
@@ -64,7 +65,6 @@ class Search extends React.Component {
         this.handleSearchCity = this.handleSearchCity.bind(this);
         this.handlePickedDate = this.handlePickedDate.bind(this);
         this.handleNumberOfGuest = this.handleNumberOfGuest.bind(this);
-        this.renderSearchView = this.renderSearchView.bind(this);
         this.toggleRenderResults = this.toggleRenderResults.bind(this);
         this.onSearchButtonPress = this.onSearchButtonPress.bind(this);
     }
@@ -134,16 +134,6 @@ class Search extends React.Component {
         this.setState({renderResults: !this.state.renderResults});
     }
 
-    renderSearchButton() {
-        if(!this.state.renderResults){
-            return (
-                <View>
-                    <Button style={[styles.searchButtonAction, {bottom: this.state.btnLocation}]} onPress={this.onSearchButtonPress}>CHERCHER</Button>
-                </View>
-            )
-        }
-    }
-
     renderSearchView() {
         if(this.state.renderResults){
             return (
@@ -157,6 +147,24 @@ class Search extends React.Component {
                     <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
                     <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>{this.state.pickedDate}</Icon.Button>
                     <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>{this.state.numberOfGuestString}</Icon.Button>
+                </View>
+            )
+        }
+    }
+
+    renderResults() {
+        if(this.state.renderResults){
+            return (
+                <SearchResults/>
+            )
+        }
+    }
+
+    renderSearchButton() {
+        if(!this.state.renderResults){
+            return (
+                <View>
+                    <Button style={[styles.searchButtonAction, {bottom: this.state.btnLocation}]} onPress={this.onSearchButtonPress}>CHERCHER</Button>
                 </View>
             )
         }
@@ -179,7 +187,7 @@ class Search extends React.Component {
                 </Modal>
 
                 {this.renderSearchView()}
-
+                {this.renderResults()}
                 {this.renderSearchButton()}
             </View>
         );

@@ -28,7 +28,6 @@ class SearchCity extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { text: 'Useless Placeholder' };
     }
 
     onPressButtonOK() {
