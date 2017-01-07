@@ -148,8 +148,8 @@ const FakeData = {
 			    message: 'Salut, que veux-tu savoir ?',
 			    createdAt: new Date('2016-01-21'),
 			    updatedAt: new Date('2016-01-21'),
-			    from_user_id: 1,
-			    to_user_id: 3
+			    from_user_id: 3,
+			    to_user_id: 1
     		}
 		];
 

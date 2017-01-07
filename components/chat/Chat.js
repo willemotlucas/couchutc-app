@@ -81,6 +81,18 @@ class Chat extends React.Component {
         } else {
             //Add picture
         }
+        var dateLastMessage = null;
+        if (rowData['message'].sendAt.toJSON().slice(0,10) == new Date().toJSON().slice(0,10)) {
+            var min = null;
+            if (rowData['message'].sendAt.getMinutes() < 10) {
+                min = "0" + rowData['message'].sendAt.getMinutes();
+            } else {
+                min = rowData['message'].sendAt.getMinutes();
+            }
+            dateLastMessage = rowData['message'].sendAt.getHours() + 'h' + min;
+        } else {
+            dateLastMessage = rowData['message'].sendAt.getDate() + ' ' + monthNames[rowData['message'].sendAt.getMonth()];
+        }
         return (
               <View>
                 <View style={styles.row}>
@@ -93,9 +105,9 @@ class Chat extends React.Component {
                             {avatar}
                             <View style={styles.message}>
                                 <Text style={styles.label}>{rowData['user'].firstName} {rowData['user'].lastName}</Text>
-                                <Text numberOfLines={1}>{rowData['message'].message} jdjdjdjdjdisjbdcidbscsdjkb</Text>
+                                <Text numberOfLines={1}>{rowData['message'].message}</Text>
                             </View>
-                            <Text style={styles.lastMessageDate}>{rowData['message'].sendAt.getDate() + ' ' + monthNames[rowData['message'].sendAt.getMonth()]}</Text>
+                            <Text style={styles.lastMessageDate}>{dateLastMessage}</Text>
                         </View>
                     </TouchableHighlight>
                 </View>
