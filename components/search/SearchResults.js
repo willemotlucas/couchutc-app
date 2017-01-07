@@ -43,9 +43,11 @@ class SearchResults extends React.Component {
         super(props);
 
         let users = realm.objects('User');
+        let results = users.filtered(`hosting = true AND home.city = "${props.city}" AND home.maxGuestNumber >= ${props.nbGuest}`);
+        
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-          dataSource: ds.cloneWithRows(users),
+          dataSource: ds.cloneWithRows(results),
         };
     }
 

@@ -155,7 +155,7 @@ class Search extends React.Component {
     renderResults() {
         if(this.state.renderResults){
             return (
-                <SearchResults/>
+                <SearchResults city={this.state.searchCity} startDate={this.state.pickedStartDate} endDate={this.state.pickedEndDate} nbGuest={this.state.numberOfGuest}/>
             )
         }
     }
