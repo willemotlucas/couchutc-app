@@ -110,7 +110,7 @@ var calendarStyles = StyleSheet.create({
 var monthNames = [
     "Jan", "Fev", "Mar",
     "Avr", "Mai", "Juin", "Juil",
-    "Au", "Sept", "Oct",
+    "Aout", "Sept", "Oct",
     "Nov", "Dec"
 ];
 
@@ -247,7 +247,7 @@ class Calendar extends React.Component {
                     onPress={() => this.onHostingRequestPressed(
                         rowData['guest'].firstName,
                         rowData['guest'].lastName,
-                        rowData['guest'].age,
+                        rowData['guest'].age(),
                         rowData['request'].startingDate,
                         rowData['request'].endingDate,
                         rowData['request'].numberOfGuest,
@@ -318,7 +318,7 @@ class Calendar extends React.Component {
                             <Icon name="user" size={35} style={styles.icon}/>
                             <View>
                                 <Text style={{fontSize: 18}}>{this.state.firstName} {this.state.lastName}</Text>
-                                <Text>21 ans </Text>
+                                <Text>{this.state.age} ans </Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
