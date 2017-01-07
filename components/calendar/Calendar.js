@@ -47,7 +47,7 @@ var styles = StyleSheet.create({
     },
     chevronRight: {
         position: 'relative', 
-        left: 130
+        left: 180
     },
     modal: {
         flexDirection: 'row',
