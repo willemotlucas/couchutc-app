@@ -13,6 +13,8 @@ import Realm from 'realm';
 import Message from '../../models/Message';
 import User from '../../models/User';
 
+//import Helper from './Helper';
+
 var styles = StyleSheet.create({
     container: {
         justifyContent: "center",
@@ -54,17 +56,36 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);
         var dataForList = [];
-        let messages = realm.objects('Message'); //TODO filter on user
-        Object.keys(messages).forEach(function(key) {
-            let users = realm.objects('User');
-            let user = users.filtered(`id = ${messages[key].to_user_id}`);
+        let messages = realm.objects('Message').sorted(['sendAt', 'from_user_id', 'to_user_id']); //TODO filter on user
+
+        var currentUserId = 1;
+        var conversations = new Object();
+        var interlocutor = null;
+        let users = realm.objects('User');
+        //get last message of each conversation
+        Object.keys(messages).forEach(function (key) {
+            if (messages[key].from_user_id === currentUserId) {
+                interlocutor = messages[key].to_user_id;
+            } else if (messages[key].to_user_id === currentUserId) {
+                interlocutor = messages[key].from_user_id;
+            } else {
+                return;
+            }
+            if (conversations[interlocutor] == undefined || conversations[interlocutor].sendAt < messages[key].sendAt) {
+                conversations[interlocutor] = messages[key];
+            } else if (conversations[interlocutor] && conversations[interlocutor].sendAt > messages[key].sendAt) {
+                return;
+            }
+        });
+        //get user data of each conversation
+        Object.keys(conversations).forEach(function(key) {
+            let user = users.filtered(`id = ${key}`);
             dataForList.push({
-                message: messages[key],
+                message: conversations[key],
                 user: user[0]
             });
         });
         var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
-
         this.state = {
             dataSource: dataSource.cloneWithRows(dataForList)
         }

@@ -143,13 +143,31 @@ const FakeData = {
 			    to_user_id: 3
 	    	},
 	    	{
-	    		id: 1,
+	    		id: 2,
 			    sendAt: new Date('2016-01-21'),
 			    message: 'Salut, que veux-tu savoir ?',
 			    createdAt: new Date('2016-01-21'),
 			    updatedAt: new Date('2016-01-21'),
 			    from_user_id: 3,
 			    to_user_id: 1
+    		},
+    		{
+	    		id: 3,
+			    sendAt: new Date('2016-01-21'),
+			    message: 'Salut, tu vas bien ?',
+			    createdAt: new Date('2016-01-21'),
+			    updatedAt: new Date('2016-01-21'),
+			    from_user_id: 2,
+			    to_user_id: 1
+    		},
+    		{
+	    		id: 4,
+			    sendAt: new Date('2016-01-21'),
+			    message: 'Salut, que veux-tu savoir de plus ?',
+			    createdAt: new Date('2016-01-21'),
+			    updatedAt: new Date('2016-01-21'),
+			    from_user_id: 1,
+			    to_user_id: 2
     		}
 		];
 
