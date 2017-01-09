@@ -124,14 +124,13 @@ class Calendar extends React.Component {
         var dataSource = new ListView.DataSource(
             {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url}
         );
-
         var eventDates = [];
         let hostingRequests = realm.objects('HostingRequest');
-        //let results = hostingRequests.filtered(`host_id = ${}`);
-
-        Object.keys(hostingRequests).forEach(function(key) {
-            var startingDate = hostingRequests[key].startingDate;
-            var endingDate = hostingRequests[key].endingDate;
+        var currentUserId = 1;
+        let results = hostingRequests.filtered(`host_id = ${currentUserId}`);
+        Object.keys(results).forEach(function(key) {
+            var startingDate = results[key].startingDate;
+            var endingDate = results[key].endingDate;
             var currentDate = new Date(startingDate.getTime());
 
             while (currentDate <= endingDate) {
@@ -144,7 +143,7 @@ class Calendar extends React.Component {
             currentDate: currentDate,
             eventDates: eventDates,
             dataSource: dataSource.cloneWithRows({}),
-            hostingRequests: hostingRequests,
+            hostingRequests: results,
             received: true,
             isOpen: false,
             isDisabled: false,
