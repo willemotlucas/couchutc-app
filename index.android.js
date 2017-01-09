@@ -39,13 +39,13 @@ const styles = StyleSheet.create({
 });
 
 const scenes = Actions.create(
-    <Scene key="root">
+    <Scene key="root" backButtonImage={require('./resources/back_button.png')}>
       <Scene key="login" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Login} initial title="Connexion"/>
       <Scene key="register" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Register} title="Inscription"/>
       <Scene key="tabbar">
         <Scene key="main" tabs tabBarStyle={styles.tabBarStyle}>
           <Scene key="calendar" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Calendar} title="Calendrier"/>
-          <Scene key="search" navigationBarStyle={styles.navigationBarStyle} title="Rechercher" initial={true} titleStyle={styles.titleStyle} icon={TabIcon}>
+          <Scene key="search" navigationBarStyle={styles.navigationBarStyle} backButtonImage={require('./resources/back_button.png')} title="Rechercher" initial={true} titleStyle={styles.titleStyle} icon={TabIcon}>
             <Scene key="search_home" component={Search} title="Rechercher"/>
             <Scene key="search_details" hideTabBar component={SearchDetails} title="Détails du logement"/>
           </Scene> 
