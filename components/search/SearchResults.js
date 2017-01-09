@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ListView, Image} from "react-native";
+import {View, Text, StyleSheet, ListView, Image, TouchableHighlight, Dimensions} from "react-native";
 import {Actions} from "react-native-router-flux";
 import { Sae } from 'react-native-textinput-effects';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -37,6 +37,7 @@ var styles = StyleSheet.create({
 });
 
 let realm = new Realm({schema: [User, Home, HostingRequest]});
+const { width, height } = Dimensions.get('window');
 
 class SearchResults extends React.Component {
 
@@ -44,7 +45,7 @@ class SearchResults extends React.Component {
         super(props);
 
         let users = realm.objects('User');
-        let results = users.filtered(`hosting = true AND home.city = "${props.city}" AND home.maxGuestNumber >= ${props.nbGuest}`);
+        let results = users;//.filtered(`hosting = true AND home.city = "${props.city}" AND home.maxGuestNumber >= ${props.nbGuest}`);
         
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
@@ -54,25 +55,27 @@ class SearchResults extends React.Component {
 
     renderRow(rowData) {
         return (
-            <Card>
-                <CardImage>
-                    <Image style={{width: 365, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}>
-                        <Text style={styles.title}>{rowData.firstName} {rowData.lastName}, {rowData.age()} ans</Text>
-                        <View style={styles.content}>
-                            <Text style={styles.contentText}><Icon name="globe" size={15}/> {rowData.home.city}, {rowData.home.country}</Text>
-                            <Text style={styles.contentText}><Icon name="bed" size={15}/> {rowData.home.sleepingAccomodation}</Text>
-                        </View>
-                    </Image>
-                </CardImage>
-            </Card>
+            <TouchableHighlight onPress={() => Actions.search_details({user: rowData})}>
+                <View>
+                    <Card >
+                        <CardImage>
+                            <Image style={{width: width, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}>
+                                <Text style={styles.title}>{rowData.firstName} {rowData.lastName}, {rowData.age()} ans</Text>
+                                <View style={styles.content}>
+                                    <Text style={styles.contentText}><Icon name="globe" size={15}/> {rowData.home.city}, {rowData.home.country}</Text>
+                                    <Text style={styles.contentText}><Icon name="bed" size={15}/> {rowData.home.sleepingAccomodation}</Text>
+                                </View>
+                            </Image>
+                        </CardImage>
+                    </Card>
+                </View>
+            </TouchableHighlight>
         ) 
     }
 
     render(){
         return (
-              <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this.renderRow}/>
+              <ListView dataSource={this.state.dataSource} renderRow={this.renderRow}/>
         );
     }
 }
