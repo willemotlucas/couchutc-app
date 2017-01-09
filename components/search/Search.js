@@ -36,6 +36,7 @@ var styles = StyleSheet.create({
         backgroundColor: defaultBackgroundColor,
         color: 'white',
         height: 40,
+        paddingTop: 7
     },
     searchText : {
         color: 'white'
@@ -56,7 +57,7 @@ class Search extends React.Component {
             pickedEndDate: null,
             numberOfGuestString: '1 voyageur',
             numberOfGuest: 1,
-            renderResults: false
+            renderResults: true
         }
 
         this.setSearchCityModalVisible = this.setSearchCityModalVisible.bind(this);
@@ -164,7 +165,7 @@ class Search extends React.Component {
         if(!this.state.renderResults){
             return (
                 <View>
-                    <Button style={[styles.searchButtonAction, {bottom: this.state.btnLocation}]} onPress={this.onSearchButtonPress}>CHERCHER</Button>
+                    <Button style={styles.searchButtonAction} onPress={this.onSearchButtonPress}>Chercher</Button>
                 </View>
             )
         }

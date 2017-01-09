@@ -21,7 +21,18 @@ var styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    end: {
+        alignItems: 'flex-end',
+        height: 40,
+        color: 'white',
+        fontSize: 20,
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: 5,
+        paddingTop: 5,
+        margin: 5
+    },
 });
 
 class SearchCity extends React.Component {
@@ -42,8 +53,12 @@ class SearchCity extends React.Component {
     render(){
         return (
             <View style={styles.modalContainer}>
-                <Sae label={'Entrez une ville'} ref="city" style={styles.textInput} labelStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'white'} iconName={'globe'}/>
-                <Button style={styles.button} onPress={() => this.onPressButtonOK()}>OK</Button>
+                <View style={{flex: 0.9}}>
+                    <Sae label={'Entrez une ville'} ref="city" style={styles.textInput} labelStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'white'} iconName={'globe'}/>
+                </View>
+                <View style={{flex: 0.1}}>
+                    <Button style={styles.end} onPress={() => this.onPressButtonOK()}>Valider</Button>
+                </View>
             </View>
         );
     }

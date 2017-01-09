@@ -25,23 +25,31 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
         height: 40
     },
-    saveButton: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
+    end: {
+        alignItems: 'flex-end',
         height: 40,
-        backgroundColor: '#009286',
         color: 'white',
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'white',
         borderRadius: 5,
-        padding: 10,
-        marginLeft: 10,
-        marginRight: 10,
-        paddingTop: 10
+        paddingTop: 5,
+        margin: 5
+    },
+    saveButton: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 40,
+        backgroundColor: '#009286',
+        color: 'white',
+        fontSize: 20,
+
+        // padding: 10,
+        // marginLeft: 10,
+        // marginRight: 10,
+        // paddingTop: 10
     },
     dates: {
         flex: 0.45,
@@ -148,7 +156,7 @@ class SearchDate extends React.Component {
                     dayInRangeTextColor={'#009286'}
                     monthTextColor={'#FFF'}
                 />
-                <Button style={styles.saveButton} onPress={this.onSaveButtonPressed}>Sauvegarder</Button>
+                <Button style={styles.end} onPress={this.onSaveButtonPressed}>Valider</Button>
             </View>
         );
     }
