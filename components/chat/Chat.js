@@ -131,7 +131,7 @@ class Chat extends React.Component {
               <View>
                 <View style={styles.row}>
                     <TouchableHighlight
-                    onPress={() => this.onConversationPressed(1)}
+                    onPress={() => this.onConversationPressed(2)}
                     underlayColor='#dddddd'>
                         <View style={styles.conversationRow}>
                             {avatar}
