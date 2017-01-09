@@ -4,10 +4,12 @@ import {
     Text, 
     StyleSheet,
     ListView,
-    TouchableHighlight
+    TouchableHighlight,
+    LayoutAnimation
 } from "react-native";
 import {Actions} from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Conversation from './Conversation';
 
 import Realm from 'realm';
 import Message from '../../models/Message';
@@ -54,15 +56,24 @@ let realm = new Realm({schema: [Message, User]});
 
 class Chat extends React.Component {
     constructor(props) {
-        super(props);
-        var dataForList = [];
-        let messages = realm.objects('Message').sorted(['sendAt', 'from_user_id', 'to_user_id']); //TODO filter on user
+        super(props);        
 
-        var currentUserId = 1;
+        //get last message of each conversation
+        let messages = realm.objects('Message').sorted(['sendAt', 'from_user_id', 'to_user_id']); //TODO filter on user        
+        var conversations = this.getLastMessageOfConversations(messages);
+        //get user data of each conversation
+        var dataForList = this.getUserData(conversations);
+
+        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
+        this.state = {
+            dataSource: dataSource.cloneWithRows(dataForList)
+        }
+    }
+
+    getLastMessageOfConversations(messages) {
         var conversations = new Object();
         var interlocutor = null;
-        let users = realm.objects('User');
-        //get last message of each conversation
+        var currentUserId = 1;
         Object.keys(messages).forEach(function (key) {
             if (messages[key].from_user_id === currentUserId) {
                 interlocutor = messages[key].to_user_id;
@@ -77,7 +88,12 @@ class Chat extends React.Component {
                 return;
             }
         });
-        //get user data of each conversation
+        return conversations;
+    }
+
+    getUserData(conversations) {
+        let users = realm.objects('User');
+        var dataForList = [];
         Object.keys(conversations).forEach(function(key) {
             let user = users.filtered(`id = ${key}`);
             dataForList.push({
@@ -85,14 +101,11 @@ class Chat extends React.Component {
                 user: user[0]
             });
         });
-        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
-        this.state = {
-            dataSource: dataSource.cloneWithRows(dataForList)
-        }
+        return dataForList;
     }
 
     onConversationPressed(id) {
-        alert('coucou');
+        this.props.onChange(id, true);
     }
 
     renderRow(rowData, sectionID, rowID) {
@@ -118,9 +131,7 @@ class Chat extends React.Component {
               <View>
                 <View style={styles.row}>
                     <TouchableHighlight
-                    onPress={() => this.onConversationPressed(
-                        rowData['message'].id
-                    )}
+                    onPress={() => this.onConversationPressed(1)}
                     underlayColor='#dddddd'>
                         <View style={styles.conversationRow}>
                             {avatar}
