@@ -18,7 +18,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         backgroundColor: "#F5FCFF",
-        width: Dimensions.get('window').width
+        width: Dimensions.get('window').width,
+        position: 'absolute',
+        top: 55,
+        height: Dimensions.get('window').height - 75,
     },
     footerContainer: {
 	    marginTop: 5,
@@ -133,7 +136,7 @@ class Conversation extends React.Component {
 				to_user_id: this.state.interlocutor.id 
 			});
 		});
-
+    	this.props.refresh(true);
 	    // for demo purpose
     	this.answerDemo(messages);
   	}
@@ -202,6 +205,7 @@ class Conversation extends React.Component {
 	        wrapperStyle={{
 	          right: {
 	            backgroundColor: '#00A799',
+	            marginRight: 5
 	          }
 	        }}
 	      />
@@ -211,7 +215,6 @@ class Conversation extends React.Component {
     render(){
         return (
             <View style={styles.container}>
-            	<Button onPress={() => this.props.onChange(false)}>Conversation page with : {this.props.user}</Button>
                 <GiftedChat
                 renderBubble={this.renderBubble}
 		        messages={this.state.messages}
@@ -225,16 +228,5 @@ class Conversation extends React.Component {
         );
     }
 }
-
-const chatCustomStyles = StyleSheet.create({
-  bubbleLeft: {
-        backgroundColor: 'white',
-    marginRight: 60,
-  },
-  bubbleRight: {
-    backgroundColor: 'green',
-    marginLeft: 60,
-  }
-});
 
 module.exports = Conversation;

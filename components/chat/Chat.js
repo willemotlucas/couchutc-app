@@ -15,8 +15,6 @@ import Realm from 'realm';
 import Message from '../../models/Message';
 import User from '../../models/User';
 
-//import Helper from './Helper';
-
 var styles = StyleSheet.create({
     container: {
         justifyContent: "center",
@@ -58,16 +56,23 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);        
 
-        //get last message of each conversation
-        let messages = realm.objects('Message').sorted(['sendAt', 'from_user_id', 'to_user_id']); //TODO filter on user        
-        var conversations = this.getLastMessageOfConversations(messages);
-        //get user data of each conversation
-        var dataForList = this.addUserData(conversations);
-
+        var dataForList = this.getMessages();
         var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
         this.state = {
             dataSource: dataSource.cloneWithRows(dataForList)
         }
+
+        this.getMessages = this.getMessages.bind(this);
+        this.refresh = this.refresh.bind(this);
+    }
+
+    getMessages() {
+        //get last message of each conversation
+        let messages = realm.objects('Message').sorted(['sendAt', 'from_user_id', 'to_user_id']); //TODO filter on user        
+        var conversations = this.getLastMessageOfConversations(messages);
+        //get user data of each conversation
+        return this.addUserData(conversations);
+
     }
 
     getLastMessageOfConversations(messages) {
@@ -89,6 +94,14 @@ class Chat extends React.Component {
             }
         });
         return conversations;
+    }
+
+    refresh() {
+        var dataForList = this.getMessages();
+        var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
+        this.setState({
+            dataSource: dataSource.cloneWithRows(dataForList)
+        });
     }
 
     addUserData(conversations) {
@@ -127,7 +140,7 @@ class Chat extends React.Component {
               <View>
                 <View style={styles.row}>
                     <TouchableHighlight
-                    onPress={() => Actions.message_details({user: rowData['user'].id})}
+                    onPress={() => Actions.message_details({user: rowData['user'].id, refresh: this.refresh()})}
                     underlayColor='#dddddd'>
                         <View style={styles.conversationRow}>
                             {avatar}

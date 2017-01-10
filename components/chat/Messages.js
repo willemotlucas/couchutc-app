@@ -26,7 +26,7 @@ class Messages extends React.Component {
         return (
             <View style={styles.container}>
                 <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
-                    <Chat tabLabel="Conversations"/>
+                    <Chat tabLabel="Conversations" refresh={true}/>
                     <Requests tabLabel="Demandes" />
                 </ScrollableTabView>
             </View>
