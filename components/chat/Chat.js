@@ -137,10 +137,10 @@ class Chat extends React.Component {
             dateLastMessage = rowData['message'].sendAt.getDate() + ' ' + monthNames[rowData['message'].sendAt.getMonth()];
         }
         return (
-              <View>
+            <View>
                 <View style={styles.row}>
                     <TouchableHighlight
-                    onPress={() => Actions.message_details({user: rowData['user'].id, refresh: this.refresh()})}
+                    onPress={() => Actions.message_details({user: rowData['user'].id, refresh: this.refresh})}
                     underlayColor='#dddddd'>
                         <View style={styles.conversationRow}>
                             {avatar}
@@ -153,7 +153,7 @@ class Chat extends React.Component {
                     </TouchableHighlight>
                 </View>
                 <View style={styles.separator}/>
-              </View>
+            </View>
         );
     }
 

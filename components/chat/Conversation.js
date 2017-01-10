@@ -205,7 +205,6 @@ class Conversation extends React.Component {
 	        wrapperStyle={{
 	          right: {
 	            backgroundColor: '#00A799',
-	            marginRight: 5
 	          }
 	        }}
 	      />
