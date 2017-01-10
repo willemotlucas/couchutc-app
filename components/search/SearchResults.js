@@ -51,11 +51,13 @@ class SearchResults extends React.Component {
         this.state = {
           dataSource: ds.cloneWithRows(results),
         };
+
+        this.renderRow = this.renderRow.bind(this);
     }
 
     renderRow(rowData) {
         return (
-            <TouchableHighlight onPress={() => Actions.search_details({user: rowData})}>
+            <TouchableHighlight onPress={() => Actions.search_details({user: rowData, startDate: this.props.startDate, endDate: this.props.endDate, nbGuest: this.props.nbGuest})}>
                 <View>
                     <Card >
                         <CardImage>

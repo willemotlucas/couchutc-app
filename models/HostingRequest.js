@@ -8,6 +8,7 @@ const HostingRequestSchema = {
     endingDate: 'date',
     numberOfGuest: 'int',
     message: 'string',
+    status: 'string',
     createdAt: 'date',
     updatedAt: 'date',
     guest_id: 'int',
