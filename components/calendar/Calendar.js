@@ -41,7 +41,33 @@ var styles = StyleSheet.create({
     },
     chevronRight: {
         position: 'relative', 
-        left: 130
+        left: 180
+    },
+    modal: {
+        flexDirection: 'row',
+        marginTop: 15,
+        height: 350,
+        width: 350,
+        borderRadius: 10
+    },
+    modalInnerContainer: {
+        backgroundColor: '#fff', 
+        marginTop: 50,
+        paddingLeft: 20,
+        paddingRight: 20,
+        borderRadius: 10,
+    },
+    borderedText: {
+        marginTop: 10,
+        borderWidth: 0.5,
+        padding: 5,
+        borderColor: 'grey',
+        borderRadius: 5,
+        minWidth: 310,
+        minHeight: 120
+    },
+    lineDetails: {
+        marginBottom: 8
     }
 });
 
