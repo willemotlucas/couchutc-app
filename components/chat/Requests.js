@@ -26,7 +26,8 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 15,
         height: 475,
-        width: 350
+        width: 350,
+        borderRadius: 10
     },
     modalInnerContainer: {
         backgroundColor: '#fff', 
