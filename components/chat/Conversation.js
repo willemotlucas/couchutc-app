@@ -35,6 +35,10 @@ const styles = StyleSheet.create({
 
 let realm = new Realm({schema: [Message, User]});
 
+//demo answers
+var counter = 0;
+const answers = ['Oui bien sur, je serais la pour vous accueilllir', 'pas de problème'];
+
 class Conversation extends React.Component {
 	constructor(props) {
 		super(props);
@@ -62,7 +66,6 @@ class Conversation extends React.Component {
 		let messages = realm.objects('Message').sorted('sendAt'); //TODO filter on user        
 		var conversation = this.getMessagesOfConversation(messages, this.state.interlocutor.id);
 		conversation = this.formatData(conversation);
-		console.log(conversation);
 	    this.setState({
 			messages: conversation
 	    });
@@ -131,7 +134,7 @@ class Conversation extends React.Component {
 	      if ((messages[0].image || messages[0].location) || !this._isAlright) {
 	        this.setState((previousState) => {
 	          return {
-	            typingText: 'React Native is typing'
+	            typingText: this.state.interlocutor.firstName + ' est en train d\'écrire'
 	          };
 	        });
 	      }
@@ -140,22 +143,14 @@ class Conversation extends React.Component {
 	    setTimeout(() => {
 	      	if (this._isMounted === true) {
 		        if (messages.length > 0) {
-		          	if (messages[0].image) {
-		            	this.onReceive('Nice picture!');
-		          	} else if (messages[0].location) {
-		            	this.onReceive('My favorite place');
-		          	} else {
-		            	if (!this._isAlright) {
-	              			this._isAlright = true;
-	             	 		this.onReceive('Alright');
-		         	   }
-	         		}	
+         	 		this.onReceive(answers[counter]);
+         	 		counter= counter + 1;
         		}
       		}
 
 	      	this.setState((previousState) => {
 		        return {
-		          typingText: null,
+		          typingText: null
 		        };
 	      	});
     	}, 1000);
