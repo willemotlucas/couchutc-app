@@ -62,7 +62,7 @@ class Chat extends React.Component {
         let messages = realm.objects('Message').sorted(['sendAt', 'from_user_id', 'to_user_id']); //TODO filter on user        
         var conversations = this.getLastMessageOfConversations(messages);
         //get user data of each conversation
-        var dataForList = this.getUserData(conversations);
+        var dataForList = this.addUserData(conversations);
 
         var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
         this.state = {
@@ -91,7 +91,7 @@ class Chat extends React.Component {
         return conversations;
     }
 
-    getUserData(conversations) {
+    addUserData(conversations) {
         let users = realm.objects('User');
         var dataForList = [];
         Object.keys(conversations).forEach(function(key) {

@@ -61,7 +61,7 @@ class Conversation extends React.Component {
 
 	componentWillMount() {
 		this._isMounted = true;
-		let messages = realm.objects('Message').sorted('sendAt'); //TODO filter on user        
+		let messages = realm.objects('Message').sorted('sendAt', 'asc');
 		var conversation = this.getMessagesOfConversation(messages, this.state.interlocutor.id);
 		conversation = this.formatData(conversation);
 	    this.setState({
@@ -71,7 +71,7 @@ class Conversation extends React.Component {
 
 	getMessagesOfConversation(messages, user) {
         var conversation = [];
-        var currentUserId = 1;
+        var currentUserId = 1;//TODO filter on user        
         Object.keys(messages).forEach(function (key) {
             if ((messages[key].from_user_id === currentUserId  && messages[key].to_user_id === user) || 
             	(messages[key].from_user_id === user  && messages[key].to_user_id === currentUserId)) {
@@ -122,6 +122,17 @@ class Conversation extends React.Component {
 				messages: GiftedChat.append(previousState.messages, messages),
 			};
 	    });
+	    realm.write(() => {
+			realm.create('Message', {
+				id: this.state.messages.length,
+				sendAt: new Date(),
+				message: messages[0].text,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				from_user_id: 1, //TODO
+				to_user_id: this.state.interlocutor.id 
+			});
+		});
 
 	    // for demo purpose
     	this.answerDemo(messages);
