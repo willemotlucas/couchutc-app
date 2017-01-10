@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         backgroundColor: "#F5FCFF",
-        bottom: 50,
         width: Dimensions.get('window').width
     },
     footerContainer: {
@@ -42,7 +41,6 @@ const answers = ['Oui bien sur, je serais la pour vous accueilllir', 'pas de pro
 class Conversation extends React.Component {
 	constructor(props) {
 		super(props);
-
 		var user = this.props.user;
 		let users = realm.objects('User');
 		var currentUser = users.filtered(`id = "${1}"`);

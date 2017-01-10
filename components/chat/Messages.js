@@ -19,50 +19,16 @@ var styles = StyleSheet.create({
 class Messages extends React.Component {
     constructor(props) {
       super(props);
-    
-      this.state = {
-        renderConversation: false,
-        user: null
-      };
 
-      this.onChange = this.onChange.bind(this);
-    }
-
-    onChange(id, data) {
-        this.setState({
-            renderConversation: data,
-            user: id
-        }, function() {
-            console.log('rendering Conversation with user : ' + id);
-        });
-        
-    }
-
-    renderConversation() {
-        if (this.state.renderConversation) {
-            return(<Conversation onChange={this.onChange} user={this.state.user}/>);
-        }
-    }
-
-    renderChatRequests() {
-        if (!this.state.renderConversation) {
-            return(
-                <View>
-                    <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
-                        <Chat tabLabel="Conversations" onChange={this.onChange}/>
-                        <Requests tabLabel="Demandes" />
-                    </ScrollableTabView>
-                    {this.renderConversation()}
-                </View>
-            );
-        }
     }
 
     render(){
         return (
             <View style={styles.container}>
-                {this.renderChatRequests()}
-                {this.renderConversation()}
+                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
+                    <Chat tabLabel="Conversations"/>
+                    <Requests tabLabel="Demandes" />
+                </ScrollableTabView>
             </View>
         );
     }

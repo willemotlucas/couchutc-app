@@ -104,10 +104,6 @@ class Chat extends React.Component {
         return dataForList;
     }
 
-    onConversationPressed(id) {
-        this.props.onChange(id, true);
-    }
-
     renderRow(rowData, sectionID, rowID) {
         var avatar = null;
         if (rowData['user'].profilePicture == null) {
@@ -131,7 +127,7 @@ class Chat extends React.Component {
               <View>
                 <View style={styles.row}>
                     <TouchableHighlight
-                    onPress={() => this.onConversationPressed(rowData['user'].id)}
+                    onPress={() => Actions.message_details({user: rowData['user'].id})}
                     underlayColor='#dddddd'>
                         <View style={styles.conversationRow}>
                             {avatar}
