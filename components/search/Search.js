@@ -24,7 +24,7 @@ var styles = StyleSheet.create({
     },
     searchContainer: {
         backgroundColor: defaultBackgroundColor,
-        marginTop: 50,
+        marginTop: 50
     },
     searchButtons: {
         margin: 10,
@@ -40,6 +40,14 @@ var styles = StyleSheet.create({
     },
     searchText : {
         color: 'white'
+    },
+    end: {
+        alignItems: 'flex-end',
+        height: 50,
+        color: 'white',
+        fontSize: 20,
+        paddingTop: 7,
+        marginTop: 30
     }
 });
 
@@ -57,7 +65,7 @@ class Search extends React.Component {
             pickedEndDate: null,
             numberOfGuestString: '1 voyageur',
             numberOfGuest: 1,
-            renderResults: true
+            renderResults: false
         }
 
         this.setSearchCityModalVisible = this.setSearchCityModalVisible.bind(this);
@@ -138,13 +146,13 @@ class Search extends React.Component {
     renderSearchView() {
         if(this.state.renderResults){
             return (
-                <View style={styles.searchContainer}>
-                    <Icon.Button name="search" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={this.toggleRenderResults}><Text style={styles.searchText}>{this.state.searchCity} - {this.state.pickedDate} - {this.state.numberOfGuest}</Text></Icon.Button>
+                <View style={[styles.searchContainer, {flex: 0.1}]}>
+                    <Icon.Button name="search" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={this.toggleRenderResults}><Text style={styles.searchText}>{this.state.searchCity} - {this.state.pickedDate} - {this.state.numberOfGuest} voyageur(s)</Text></Icon.Button>
                 </View>
             )
         } else {
             return (
-                <View style={styles.searchContainer}>
+                <View style={[styles.searchContainer, {flex: 0.3}]}>
                     <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
                     <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>{this.state.pickedDate}</Icon.Button>
                     <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>{this.state.numberOfGuestString}</Icon.Button>
@@ -161,11 +169,21 @@ class Search extends React.Component {
         }
     }
 
+    renderBlankContainer() {
+        if(!this.state.renderResults){
+            return (
+                <View style={{flex: 0.5}}>
+
+                </View>
+            );
+        }
+    }
+
     renderSearchButton() {
         if(!this.state.renderResults){
             return (
-                <View>
-                    <Button style={styles.searchButtonAction} onPress={this.onSearchButtonPress}>Chercher</Button>
+                <View style={{flex: 0.2}}>
+                    <Button style={[styles.searchButtonAction, styles.end]} onPress={this.onSearchButtonPress}>Chercher</Button>
                 </View>
             )
         }
@@ -189,6 +207,7 @@ class Search extends React.Component {
 
                 {this.renderSearchView()}
                 {this.renderResults()}
+                {this.renderBlankContainer()}
                 {this.renderSearchButton()}
             </View>
         );
