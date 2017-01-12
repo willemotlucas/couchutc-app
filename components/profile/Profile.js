@@ -1,98 +1,27 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from "react-native";
+import {View, Text, StyleSheet} from "react-native";
 import {Actions} from "react-native-router-flux";
-import Real from 'realm';
-
-import User from '../../models/User';
-import Home from '../../models/Home';
+import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
+import User from './User';
+import Home from './Home';
 
 var styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 64,
-        marginBottom: 50,
-        backgroundColor: "#FAFAFA"
-    },
-    circle: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: "#CACACA",
-        marginTop: 13
-    },
-    title: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        color: 'white'
-    },
-    label: {
-        fontSize: 18
-    }, 
-    header: {
-        backgroundColor: '#009286',
-        height: 150,
-        alignItems: 'center'
-    },
-    text: {
-        backgroundColor: 'white',
-        fontSize: 15,
-        padding: 5
-    },
-    section: {
-        marginTop: 10,
-        marginBottom: 10
-    },
-    content: {
-        padding: 5
-    },
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#F5FCFF",
+    }
 });
 
-let realm = new Realm({schema: [User, Home]});
-
 class Profile extends React.Component {
-    constructor() {
-        super();
-
-    }
-
-    render() {
-        const user = realm.objects('User')[0];
-        const home = user.home;
-
+    render(){
         return (
             <View style={styles.container}>
-                <ScrollView>
-                    <View style={styles.header}>
-                        <View style={styles.circle}/>
-                        <Text style={styles.title}>{user.firstName} {user.lastName}</Text>
-                    </View>
-                    <View style={styles.content}>
-                        <View style={styles.section}>
-                            <Text style={styles.label}>Date de naissance</Text>
-                            <Text style={styles.text}>{user.birthday.toLocaleDateString('fr')}</Text>
-                        </View>
-                        <View style={styles.section}>
-                            <Text style={styles.label}>Lieu de vie</Text>
-                            <Text style={styles.text}>{home.city}, {home.country}</Text>
-                        </View>
-                        <View style={styles.section}>
-                            <Text style={styles.label}>Branche</Text>
-                            <Text style={styles.text}>{user.speciality}</Text>
-                        </View>
-                        <View style={styles.section}>
-                            <Text style={styles.label}>Numéro de téléphone</Text>
-                            <Text style={styles.text}>{user.phoneNumber}</Text>
-                        </View>
-                        <View style={styles.section}>
-                            <Text style={styles.label}>Biographie</Text>
-                            <Text style={styles.text}>{user.biography}</Text>
-                        </View>
-                        <View style={styles.section}>
-                            <Text style={styles.label}>Pays visités</Text>
-                            <Text style={styles.text}>{user.visitedCountries}</Text>
-                        </View>
-                    </View>
-                </ScrollView>
+                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
+                    <User tabLabel="Profil" user={1} />
+                    <Home tabLabel="Hébergement" user={1}/>
+                </ScrollableTabView>
             </View>
         );
     }

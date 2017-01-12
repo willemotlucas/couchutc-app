@@ -49,7 +49,7 @@ const scenes = Actions.create(
             <Scene key="search_home" component={Search} title="Rechercher"/>
             <Scene key="search_details" hideTabBar component={SearchDetails} title="Détails du logement"/>
           </Scene> 
-          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil"/>
+          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil" hideNavBar/>
           <Scene key="messages" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Messages} title="Messages"/>
         </Scene>
       </Scene>
