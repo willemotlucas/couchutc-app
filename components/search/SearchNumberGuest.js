@@ -80,7 +80,7 @@ class SearchNumberGuest extends React.Component {
                     </View>
                 </View>
                 <View style={{flex: 0.1}}>
-                    <Button style={styles.end} onPress={this.onSaveButtonPressed}>Valider</Button>
+                    <Button style={styles.end} onPress={this.onSaveButtonPress}>Valider</Button>
                 </View>
             </View>
         );

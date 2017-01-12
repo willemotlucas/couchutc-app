@@ -77,7 +77,7 @@ class SearchResults extends React.Component {
 
     render(){
         return (
-              <ListView dataSource={this.state.dataSource} renderRow={this.renderRow}/>
+              <ListView style={{marginBottom: 50}} dataSource={this.state.dataSource} renderRow={this.renderRow}/>
         );
     }
 }
