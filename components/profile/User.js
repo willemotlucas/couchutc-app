@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from "react-native";
 import {Actions} from "react-native-router-flux";
+import Button from "apsl-react-native-button";
 
 import Real from 'realm';
 
@@ -90,6 +91,7 @@ class User extends React.Component {
                             <Text style={styles.label}>Pays visités</Text>
                             <Text style={styles.text}>{user.visitedCountries}</Text>
                         </View>
+                        <Button style={{backgroundColor: '#F94351', borderColor: 'transparent'}}><Text style={{color: 'white', fontSize: 20}}>Déconnexion</Text></Button>
                     </View>
                 </ScrollView>
             </View>
