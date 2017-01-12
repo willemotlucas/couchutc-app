@@ -35,7 +35,7 @@ var styles = StyleSheet.create({
         fontSize: 18
     }, 
     header: {
-        backgroundColor: '#009286',
+        backgroundColor: '#00A799',
         height: 150,
         alignItems: 'center'
     },

@@ -18,7 +18,7 @@ class Profile extends React.Component {
     render(){
         return (
             <View style={styles.container}>
-                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
+                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#009286" style={{borderWidth: 0}}/>}>
                     <User tabLabel="Profil" user={1} />
                     <Home tabLabel="Hébergement" user={1}/>
                 </ScrollableTabView>
