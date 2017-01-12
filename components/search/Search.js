@@ -107,13 +107,17 @@ class Search extends React.Component {
     }
 
     handlePickedDate(startDate, endDate) {
-        var dateOptions = {day: 'numeric', month: 'short'};
-        var pickedDate = startDate.toLocaleDateString('fr', dateOptions) + ' - ' + endDate.toLocaleDateString('fr', dateOptions);
+        var dateOptions = {
+            day: 'numeric', 
+            month: 'short'
+        };
+
+        const dateString = startDate.toLocaleDateString('fr', dateOptions) + ' - ' + endDate.toLocaleDateString('fr', dateOptions);
 
         this.setState({
             pickedStartDate: startDate,
             pickedEndDate: endDate,
-            pickedDate: pickedDate
+            pickedDate: dateString
         })
     }
 
@@ -152,7 +156,7 @@ class Search extends React.Component {
             )
         } else {
             return (
-                <View style={[styles.searchContainer, {flex: 0.3}]}>
+                <View style={[styles.searchContainer, {flex: 0.4}]}>
                     <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
                     <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>{this.state.pickedDate}</Icon.Button>
                     <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>{this.state.numberOfGuestString}</Icon.Button>
@@ -172,7 +176,7 @@ class Search extends React.Component {
     renderBlankContainer() {
         if(!this.state.renderResults){
             return (
-                <View style={{flex: 0.5}}>
+                <View style={{flex: 0.3}}>
 
                 </View>
             );
@@ -182,7 +186,7 @@ class Search extends React.Component {
     renderSearchButton() {
         if(!this.state.renderResults){
             return (
-                <View style={{flex: 0.2}}>
+                <View style={{flex: 0.3}}>
                     <Button style={[styles.searchButtonAction, styles.end]} onPress={this.onSearchButtonPress}>Chercher</Button>
                 </View>
             )
