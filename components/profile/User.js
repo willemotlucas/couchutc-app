@@ -6,10 +6,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modalbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Real from 'realm';
-
-import Users from '../../models/User';
-import Home from '../../models/Home';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     container: {
@@ -70,8 +67,6 @@ var styles = StyleSheet.create({
     }
 });
 
-let realm = new Realm({schema: [Users, Home]});
-
 class User extends React.Component {
     constructor(props) {
         super(props);
@@ -118,11 +113,11 @@ class User extends React.Component {
     }
 
     render() {
-        var profilePicture = null;
+        var profilePicture = this.state.user.profilePicture;
         if (this.state.user.profilePicture == null) {
             profilePicture = <Image style={{width: 70, height: 70}} source={require('../../resources/user.png')}/>;
         } else {
-            profilePicture = <Image style={{width: 70, height: 70}} source={require('../../resources/user.png')}/>;
+            profilePicture = <Image style={{width: 70, height: 70}} source={profilePicture}/>;
         }
         return (
             <View style={styles.container}>

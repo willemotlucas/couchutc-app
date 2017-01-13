@@ -13,9 +13,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Button from 'apsl-react-native-button'
 import Toast from 'react-native-root-toast';
 
-import Realm from 'realm';
-import User from '../../models/User';
-import HostingRequest from '../../models/HostingRequest';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     container: {
@@ -83,9 +81,6 @@ var monthNames = [
     "Au", "Sept", "Oct",
     "Nov", "Dec"
 ];
-
-
-let realm = new Realm({schema: [User, HostingRequest]});
 
 const onButtonPress = () => {
     Alert.alert('Button has been pressed!');

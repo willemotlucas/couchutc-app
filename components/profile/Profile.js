@@ -1,6 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet} from "react-native";
 import {Actions} from "react-native-router-flux";
+import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
+import User from './User';
+import Home from './Home';
 
 var styles = StyleSheet.create({
     container: {
@@ -8,24 +11,17 @@ var styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#F5FCFF",
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: "center",
-        margin: 10,
-    },
-    instructions: {
-        textAlign: "center",
-        color: "#333333",
-        marginBottom: 5,
-    },
+    }
 });
 
 class Profile extends React.Component {
     render(){
         return (
             <View style={styles.container}>
-                <Text>Profile page</Text>
+                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#009286" style={{borderWidth: 0}}/>}>
+                    <User tabLabel="Profil" user={1} />
+                    <Home tabLabel="Hébergement" user={1}/>
+                </ScrollableTabView>
             </View>
         );
     }
