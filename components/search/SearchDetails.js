@@ -12,6 +12,7 @@ import User from '../../models/User';
 import Home from '../../models/Home';
 import HomeImage from '../../models/Image';
 import HostingRequest from '../../models/HostingRequest';
+import DateFormat from '../common/DateFormat';
 
 var styles = StyleSheet.create({
     container: {
@@ -19,7 +20,6 @@ var styles = StyleSheet.create({
         marginTop: 64,
     },
     scrollContainer: {
-        marginBottom: 40,
         backgroundColor: '#FAFAFA',
     },
     title: {
@@ -60,7 +60,6 @@ var styles = StyleSheet.create({
         marginTop: 50,
         paddingLeft: 20,
         paddingRight: 20,
-        borderRadius: 10,
     },
     inlineBlocks: {
         flexDirection: 'row',
@@ -82,7 +81,6 @@ var styles = StyleSheet.create({
         minHeight: 100
     },
     sendButton: {
-        borderRadius: 5,
         backgroundColor: '#00A799',
         color: 'white',
         height: 40,
@@ -177,8 +175,8 @@ class SearchDetails extends React.Component {
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="calendar" size={30}  style={styles.icon}/>
                             <View style={{marginLeft: 10}}>
-                                <Text>Arrivée : {this.props.startDate.toLocaleDateString('fr')}</Text>
-                                <Text>Départ : {this.props.endDate.toLocaleDateString('fr')}</Text>
+                                <Text>Arrivée : {DateFormat.getDateInLongStringWithDay(this.props.startDate)}</Text>
+                                <Text>Départ : {DateFormat.getDateInLongStringWithDay(this.props.endDate)}</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
