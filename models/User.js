@@ -8,7 +8,7 @@ const UserSchema = {
     lastName: 'string',
     birthday: 'date',
     gender: 'string',
-    profilePicture: {type: 'data', optional: true},
+    profilePicture: {type: 'Image', optional: true},
     biography: 'string',
     visitedCountries: 'string',
     smoker: 'bool',
@@ -17,7 +17,7 @@ const UserSchema = {
     phoneNumber: 'string',
     createdAt: 'date',
     updatedAt: 'date',
-    home: 'Home'
+    home: 'Home',
   }
 };
 
