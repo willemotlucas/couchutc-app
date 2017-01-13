@@ -118,11 +118,11 @@ class User extends React.Component {
     }
 
     render() {
-        var profilePicture = null;
+        var profilePicture = this.state.user.profilePicture;
         if (this.state.user.profilePicture == null) {
             profilePicture = <Image style={{width: 70, height: 70}} source={require('../../resources/user.png')}/>;
         } else {
-            profilePicture = <Image style={{width: 70, height: 70}} source={require('../../resources/user.png')}/>;
+            profilePicture = <Image style={{width: 70, height: 70}} source={profilePicture}/>;
         }
         return (
             <View style={styles.container}>
