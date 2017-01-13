@@ -11,6 +11,7 @@ import Modal from 'react-native-modalbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Button from 'apsl-react-native-button'
+import Toast from 'react-native-root-toast';
 
 import Realm from 'realm';
 import User from '../../models/User';
@@ -116,7 +117,8 @@ class Requests extends React.Component {
             isDisabled: false,
             swipeToClose: true,
             sliderValue: 0.3,
-            currentUserId: currentUser
+            currentUserId: currentUser,
+            toastVisible: false
         };
     }
 
@@ -176,6 +178,7 @@ class Requests extends React.Component {
         });
 
         this.refs.detailsRequest.open();
+
     }
 
     closeRequestDetails() {
@@ -207,6 +210,23 @@ class Requests extends React.Component {
         this.setState({
             dataSource: dataSource.cloneWithRows(dataForList)
         });
+    }
+
+    displayToast(message) {
+        // Add a Toast on screen.
+        let toast = Toast.show(message, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0
+        });
+
+        // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+        setTimeout(function () {
+            Toast.hide(toast);
+        }, 800);
     }
 
     renderRow(rowData, sectionID, rowID) {
