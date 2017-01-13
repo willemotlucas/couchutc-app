@@ -11,9 +11,7 @@ import {Actions} from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Conversation from './Conversation';
 
-import Realm from 'realm';
-import Message from '../../models/Message';
-import User from '../../models/User';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     container: {
@@ -50,8 +48,6 @@ var monthNames = [
     "Au", "Sept", "Oct",
     "Nov", "Dec"
 ];
-
-let realm = new Realm({schema: [Message, User]});
 
 class Chat extends React.Component {
     constructor(props) {

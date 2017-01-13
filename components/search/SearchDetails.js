@@ -8,6 +8,7 @@ import Carousel from 'react-native-looped-carousel';
 import Modal from 'react-native-modalbox';
 
 import realm from '../../models/realm';
+import DateFormat from '../common/DateFormat';
 
 var styles = StyleSheet.create({
     container: {

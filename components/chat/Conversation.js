@@ -7,9 +7,7 @@ import {
 } from "react-native";
 import Button from 'react-native-button';
 
-import Realm from 'realm';
-import Message from '../../models/Message';
-import User from '../../models/User';
+import realm from '../../models/realm';
 
 import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
 
@@ -34,8 +32,6 @@ const styles = StyleSheet.create({
 		color: '#aaa',
 	},
 });
-
-let realm = new Realm({schema: [Message, User]});
 
 //demo answers
 var counter = 0;
