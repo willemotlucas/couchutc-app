@@ -94,8 +94,9 @@ class Requests extends React.Component {
     constructor(props) {
         super(props);
 
+        var currentUser = 1;
         var dataForList = [];
-        let requests = realm.objects('HostingRequest');
+        let requests = realm.objects('HostingRequest').filtered(`guest_id = ${currentUser} or host_id = ${currentUser}`);
         Object.keys(requests).forEach(function(key) {
             let users = realm.objects('User');
             let guests = users.filtered(`id = ${requests[key].guest_id}`);
@@ -123,7 +124,9 @@ class Requests extends React.Component {
             isOpen: false,
             isDisabled: false,
             swipeToClose: true,
-            sliderValue: 0.3
+            sliderValue: 0.3,
+            currentUserId: currentUser
+
         };
     }
 
@@ -168,7 +171,7 @@ class Requests extends React.Component {
             //Add picture
         }
         var receivedPicture = null;
-        if (!rowData.received) {
+        if (rowData['request'].guest_id === this.state.currentUserId) {
             receivedPicture = <MaterialIcons name='call-made' size={40} style={{color: '#00A799', position: 'absolute', right: 10, top: 15}}/>
         } else {
             receivedPicture = <MaterialIcons name='call-received' size={40} style={{color: '#F94351', position: 'absolute', right: 10, top: 15}}/>;
