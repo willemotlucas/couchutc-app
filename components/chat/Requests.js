@@ -113,7 +113,8 @@ class Requests extends React.Component {
             swipeToClose: true,
             sliderValue: 0.3,
             currentUserId: currentUser,
-            toastVisible: false
+            visible: false,
+            messageToast: ""
         };
     }
 
@@ -187,6 +188,7 @@ class Requests extends React.Component {
         });
         this.refresh();
         this.refs.detailsRequest.close();
+        this.displayToast('Demande d\'hébergement acceptée');
     }
 
     refuseHostingRequest(id) {
@@ -196,6 +198,7 @@ class Requests extends React.Component {
         });
         this.refresh();
         this.refs.detailsRequest.close();
+        this.displayToast('Demande d\'hébergement refusée');
     }
 
     refresh() {
@@ -208,20 +211,15 @@ class Requests extends React.Component {
     }
 
     displayToast(message) {
-        // Add a Toast on screen.
-        let toast = Toast.show(message, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0
-        });
+        setTimeout(() => this.setState({
+            visible: true,
+            messageToast: message
+        }), 1000); // show toast after 1s
 
-        // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
-        setTimeout(function () {
-            Toast.hide(toast);
-        }, 800);
+        setTimeout(() => this.setState({
+            visible: false,
+            messageToast: ""
+        }), 5000); // hide toast after 5s
     }
 
     renderRow(rowData, sectionID, rowID) {
@@ -323,6 +321,14 @@ class Requests extends React.Component {
                             </Button>
                         </View>
                 </Modal>
+                <Toast
+                visible={this.state.visible}
+                position={-65}
+                shadow={false}
+                animation={false}
+                hideOnPress={true}>
+                    {this.state.messageToast}
+                </Toast>
             </View>
         );
     }
