@@ -17,18 +17,15 @@ var styles = StyleSheet.create({
     label: {
         fontSize: 20,
         color: 'white',
-        marginRight: 40,
-        paddingTop: 9
+        marginRight: 40
     },
     number: {
         fontSize: 25,
         color: 'white',
-        fontWeight: 'bold',
-        paddingTop: 7,
-        width: 25
+        fontWeight: 'bold'
     },
     button: {
-
+        paddingBottom: 20,
     },
     end: {
         alignItems: 'flex-end',
@@ -39,7 +36,7 @@ var styles = StyleSheet.create({
         borderColor: 'white',
         borderRadius: 5,
         paddingTop: 5,
-        margin: 10
+        margin: 5
     }
 });
 
@@ -83,7 +80,7 @@ class SearchNumberGuest extends React.Component {
                     </View>
                 </View>
                 <View style={{flex: 0.1}}>
-                    <Button style={styles.end} onPress={this.onSaveButtonPress}>Valider</Button>
+                    <Button style={styles.end} onPress={this.onSaveButtonPressed}>Valider</Button>
                 </View>
             </View>
         );

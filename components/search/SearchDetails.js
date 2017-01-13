@@ -10,9 +10,7 @@ import Modal from 'react-native-modalbox';
 
 import User from '../../models/User';
 import Home from '../../models/Home';
-import HomeImage from '../../models/Image';
 import HostingRequest from '../../models/HostingRequest';
-import DateFormat from '../common/DateFormat';
 
 var styles = StyleSheet.create({
     container: {
@@ -20,6 +18,7 @@ var styles = StyleSheet.create({
         marginTop: 64,
     },
     scrollContainer: {
+        marginBottom: 40,
         backgroundColor: '#FAFAFA',
     },
     title: {
@@ -60,6 +59,7 @@ var styles = StyleSheet.create({
         marginTop: 50,
         paddingLeft: 20,
         paddingRight: 20,
+        borderRadius: 10,
     },
     inlineBlocks: {
         flexDirection: 'row',
@@ -81,6 +81,7 @@ var styles = StyleSheet.create({
         minHeight: 100
     },
     sendButton: {
+        borderRadius: 5,
         backgroundColor: '#00A799',
         color: 'white',
         height: 40,
@@ -88,7 +89,7 @@ var styles = StyleSheet.create({
     }
 });
 
-let realm = new Realm({schema: [User, Home, HostingRequest, HomeImage]});
+let realm = new Realm({schema: [User, Home, HostingRequest]});
 const { width, height } = Dimensions.get('window');
 
 class SearchDetails extends React.Component {
@@ -139,7 +140,9 @@ class SearchDetails extends React.Component {
             <View style={styles.container}>
                 <ScrollView style={styles.scrollContainer}>
                     <Carousel style={{width: width, height: 200}}>
-                        {user.home.photos.map((photo) => <Image style={{width: width, height: 200}} source={{uri: photo.value}}/>)}
+                        <Image style={{width: width, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}/>
+                        <Image style={{width: width, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}/>
+                        <Image style={{width: width, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}/>
                     </Carousel>
                     <View style={styles.content}>
                         <Text style={styles.title}>{user.firstName} {user.lastName}, {user.age()} ans</Text>
@@ -175,8 +178,8 @@ class SearchDetails extends React.Component {
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="calendar" size={30}  style={styles.icon}/>
                             <View style={{marginLeft: 10}}>
-                                <Text>Arrivée : {DateFormat.getDateInLongStringWithDay(this.props.startDate)}</Text>
-                                <Text>Départ : {DateFormat.getDateInLongStringWithDay(this.props.endDate)}</Text>
+                                <Text>Arrivée : {this.props.startDate.toLocaleDateString('fr')}</Text>
+                                <Text>Départ : {this.props.endDate.toLocaleDateString('fr')}</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>

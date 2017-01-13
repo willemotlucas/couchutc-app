@@ -56,14 +56,12 @@ const scenes = Actions.create(
     </Scene>
 );
 
-export default class CouchUTC extends Component {  
+export default class CouchUTC extends Component {
   render() {
     return (
       <Router scenes={scenes}/>
     );
   }
 }
-
-console.disableYellowBox = true;
 
 AppRegistry.registerComponent('CouchUTC', () => CouchUTC);

@@ -10,8 +10,7 @@ const HomeSchema = {
     sleepingAccomodation: 'string',
     maxGuestNumber: 'int',
     createdAt: 'date',
-    updatedAt: 'date',
-    photos: {type: 'list', objectType: 'Image'}
+    updatedAt: 'date'
   }
 };
 
