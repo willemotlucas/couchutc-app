@@ -4,6 +4,8 @@ import {Actions} from "react-native-router-flux";
 import Calendar from 'react-native-day-picker';
 import Button from 'react-native-button';
 
+import DateFormat from '../common/DateFormat';
+
 var styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
@@ -34,7 +36,7 @@ var styles = StyleSheet.create({
         borderColor: 'white',
         borderRadius: 5,
         paddingTop: 5,
-        margin: 5
+        margin: 10
     },
     saveButton: {
         position: 'absolute',
@@ -65,11 +67,6 @@ var styles = StyleSheet.create({
 
 var monthsLocale = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 var weekDaysLocale = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
-var dateOption = {
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric'
-}
 
 class SearchDate extends React.Component {
 
@@ -92,7 +89,7 @@ class SearchDate extends React.Component {
         if(current != undefined && previous == undefined) {
             this.setState({
                 startDate: new Date(current),
-                startDateString: current.toLocaleDateString('fr', dateOption),
+                startDateString: DateFormat.getDateInLongStringWithDay(current),
                 numberOfDateSelected: this.state.numberOfDateSelected + 1
             });            
         }
@@ -101,23 +98,23 @@ class SearchDate extends React.Component {
             if(current > previous && this.state.numberOfDateSelected == 1) {
                 this.setState({
                     startDate: new Date(previous),
-                    startDateString: previous.toLocaleDateString('fr', dateOption),
+                    startDateString: DateFormat.getDateInLongStringWithDay(previous),
                     endDate: new Date(current),
-                    endDateString: current.toLocaleDateString('fr', dateOption),
+                    endDateString: DateFormat.getDateInLongStringWithDay(current),
                     numberOfDateSelected: this.state.numberOfDateSelected + 1
                 });
             } else if (this.state.numberOfDateSelected == 2){
                 this.setState({
                     startDate: new Date(current),
-                    startDateString: current.toLocaleDateString('fr', dateOption),
+                    startDateString: DateFormat.getDateInLongStringWithDay(current),
                     endDate: null,
                     endDateString: "Date de départ",
                     numberOfDateSelected: 1
                 });
             } else if(this.state.numberOfDateSelected == 1 && previous > current){
                 this.setState({
-                    startDate: new Date(current),
-                    startDateString: current.toLocaleDateString('fr', dateOption)
+                    startDate: new Date(current), 
+                    startDateString: DateFormat.getDateInLongStringWithDay(current)
                 });
             }
         }
@@ -147,8 +144,8 @@ class SearchDate extends React.Component {
                     startFromMonday={true}
                     startDate={new Date()}
                     width={350}
-                    monthsLocale={monthsLocale}
-                    weekDaysLocale={weekDaysLocale}
+                    monthsLocale={DateFormat.getLongMonths()}
+                    weekDaysLocale={DateFormat.getShortWeekDays()}
                     isFutureDate={true}
                     onSelectionChange={this.handleDateChanged}
                     bodyBackColor={"#009286"}

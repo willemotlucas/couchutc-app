@@ -4,6 +4,7 @@ import {Actions} from "react-native-router-flux";
 import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import Requests from './Requests';
 import Chat from './Chat';
+import Conversation from './Conversation';
 
 var styles = StyleSheet.create({
     container: {
@@ -16,11 +17,16 @@ var styles = StyleSheet.create({
 });
 
 class Messages extends React.Component {
+    constructor(props) {
+      super(props);
+
+    }
+
     render(){
         return (
             <View style={styles.container}>
                 <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
-                    <Chat tabLabel="Conversations" />
+                    <Chat tabLabel="Conversations" refresh={true}/>
                     <Requests tabLabel="Demandes" />
                 </ScrollableTabView>
             </View>

@@ -31,8 +31,8 @@ var styles = StyleSheet.create({
         borderColor: 'white',
         borderRadius: 5,
         paddingTop: 5,
-        margin: 5
-    },
+        margin: 10  
+    }
 });
 
 class SearchCity extends React.Component {

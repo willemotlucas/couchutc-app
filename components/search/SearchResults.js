@@ -30,6 +30,15 @@ var styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.4)',
         color: 'white',
         padding: 5,
+    },
+    noResults: {
+        flex: 0.8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 20
+    },
+    noResultsText: {
+        fontSize: 18
     }
 });
 
@@ -40,13 +49,15 @@ class SearchResults extends React.Component {
     constructor(props) {
         super(props);
 
-        let users = realm.objects('User');
-        let results = users;//.filtered(`hosting = true AND home.city = "${props.city}" AND home.maxGuestNumber >= ${props.nbGuest}`);
+        let results = realm.objects('User').filtered(`hosting = true AND home.city = "${props.city}" AND home.maxGuestNumber >= ${props.nbGuest}`);
         
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
           dataSource: ds.cloneWithRows(results),
         };
+
+        if(results.length == 0)
+            this.state.noResults = true;
 
         this.renderRow = this.renderRow.bind(this);
     }
@@ -57,7 +68,7 @@ class SearchResults extends React.Component {
                 <View>
                     <Card >
                         <CardImage>
-                            <Image style={{width: width - 10, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}>
+                            <Image style={{width: width - 10, height: 200}} source={{uri: rowData.home.photos[0].value}}>
                                 <Text style={styles.title}>{rowData.firstName} {rowData.lastName}, {rowData.age()} ans</Text>
                                 <View style={styles.content}>
                                     <Text style={styles.contentText}><Icon name="globe" size={15}/> {rowData.home.city}, {rowData.home.country}</Text>
@@ -71,10 +82,20 @@ class SearchResults extends React.Component {
         ) 
     }
 
+    renderResults() {
+        if(this.state.noResults){
+            return (
+                <View style={styles.noResults}>
+                    <Text style={styles.noResultsText}>Aucun hébergement trouvé</Text>
+                </View>
+            );
+        } else {
+            return (<ListView style={{marginBottom: 50}} dataSource={this.state.dataSource} renderRow={this.renderRow}/>);
+        }
+    }
+
     render(){
-        return (
-              <ListView dataSource={this.state.dataSource} renderRow={this.renderRow}/>
-        );
+        return this.renderResults();
     }
 }
 
