@@ -42,7 +42,7 @@ const answers = ['Oui bien sur, je serais la pour vous accueilllir', 'pas de pro
 class Conversation extends React.Component {
 	constructor(props) {
 		super(props);
-		var user = this.props.user;
+		var user = this.props.interlocutor;
 		let users = realm.objects('User');
 		var currentUser = users.filtered(`id = "${1}"`);
 		var interlocutor = users.filtered(`id = "${user}"`);

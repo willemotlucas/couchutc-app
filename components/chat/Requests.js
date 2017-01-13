@@ -94,26 +94,17 @@ class Requests extends React.Component {
     constructor(props) {
         super(props);
 
+        var dataForList = this.getDataForList();
         var currentUser = 1;
-        var dataForList = [];
-        let requests = realm.objects('HostingRequest').filtered(`guest_id = ${currentUser} or host_id = ${currentUser}`);
-        Object.keys(requests).forEach(function(key) {
-            let users = realm.objects('User');
-            let guests = users.filtered(`id = ${requests[key].guest_id}`);
-
-            dataForList.push({
-                request: requests[key],
-                user: guests[0]
-            });
-        });
-
         var dataSource = new ListView.DataSource(
           {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
         this.state = {
             dataSource: dataSource.cloneWithRows(dataForList),
+            interlocutorId: '',
             firstName: '',
             lastName: '',
             age: '',
+            requestId: '',
             startingDate: '',
             startingHour: '',
             endingDate: '',
@@ -126,11 +117,37 @@ class Requests extends React.Component {
             swipeToClose: true,
             sliderValue: 0.3,
             currentUserId: currentUser
-
         };
     }
 
-    onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message) {
+    getDataForList() {
+        var currentUser = 1;
+        let requests = realm.objects('HostingRequest').filtered(`(guest_id = ${currentUser} or host_id = ${currentUser}) and status = "pending"`);
+
+        return this.formatDataForList(requests);
+    }
+
+    formatDataForList(requests) {
+        var currentUser = 1;
+        var dataForList = [];
+        Object.keys(requests).forEach(function(key) {
+            if (requests[key].guest_id == currentUser) {
+                var userToDisplay = requests[key].host_id;
+            } else {
+                var userToDisplay = requests[key].guest_id;
+            }
+            let users = realm.objects('User');
+            let guests = users.filtered(`id = ${userToDisplay}`);
+
+            dataForList.push({
+                request: requests[key],
+                user: guests[0]
+            });
+        });
+        return dataForList;
+    }
+
+    onHostingRequestPressed(id, firstName, lastName, age, requestId, startingDate, endingDate, nbGuests, message) {
         //format minutes
         var startingMin = null;
         if (startingDate.getMinutes() < 10) {
@@ -145,9 +162,11 @@ class Requests extends React.Component {
             endingMin = endingDate.getMinutes();
         }
         this.setState({
+            interlocutorId: id,
             firstName: firstName,
             lastName: lastName,
             age: age,
+            requestId: requestId,
             startingDate: startingDate.getDate() + ' ' + monthNames[startingDate.getMonth()],
             startingHour: startingDate.getHours() + 'h' + startingMin,
             endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
@@ -161,6 +180,33 @@ class Requests extends React.Component {
 
     closeRequestDetails() {
         this.refs.detailsRequest.close();
+    }
+
+    acceptHostingRequest(id) {
+        let request = realm.objects('HostingRequest').filtered(`id = ${id}`)[0];
+        realm.write(() => {
+          request.status = "accepted";
+        });
+        this.refresh();
+        this.refs.detailsRequest.close();
+    }
+
+    refuseHostingRequest(id) {
+        let request = realm.objects('HostingRequest').filtered(`id = ${id}`)[0];
+        realm.write(() => {
+          request.status = "cancelled";
+        });
+        this.refresh();
+        this.refs.detailsRequest.close();
+    }
+
+    refresh() {
+        var dataForList = this.getDataForList();
+        var dataSource = new ListView.DataSource(
+            {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
+        this.setState({
+            dataSource: dataSource.cloneWithRows(dataForList)
+        });
     }
 
     renderRow(rowData, sectionID, rowID) {
@@ -181,9 +227,11 @@ class Requests extends React.Component {
                 <View style={styles.row}>
                     <TouchableHighlight
                     onPress={() => this.onHostingRequestPressed(
+                    rowData['user'].id,
                     rowData['user'].firstName,
                     rowData['user'].lastName,
                     rowData['user'].age(),
+                    rowData['request'].id,
                     rowData['request'].startingDate,
                     rowData['request'].endingDate,
                     rowData['request'].numberOfGuest,
@@ -249,10 +297,10 @@ class Requests extends React.Component {
                         </View>
                     </View>
                     <View style={styles.buttons}>
-                            <Button style={{backgroundColor: '#00A799', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}}>
+                            <Button style={{backgroundColor: '#00A799', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}} onPress={() => this.acceptHostingRequest(this.state.requestId)}>
                                 Accepter la demande
                             </Button>
-                            <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}}>
+                            <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}} onPress={() => Actions.message_details({interlocutor: this.state.interlocutorId, refresh: this.refresh})}>
                                 Demander plus d'informations
                             </Button>
                             <Button style={{backgroundColor: '#F94351', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}}>
