@@ -10,6 +10,7 @@ import Modal from 'react-native-modalbox';
 
 import User from '../../models/User';
 import Home from '../../models/Home';
+import HomeImage from '../../models/Image';
 import HostingRequest from '../../models/HostingRequest';
 
 var styles = StyleSheet.create({
@@ -89,7 +90,7 @@ var styles = StyleSheet.create({
     }
 });
 
-let realm = new Realm({schema: [User, Home, HostingRequest]});
+let realm = new Realm({schema: [User, Home, HostingRequest, HomeImage]});
 const { width, height } = Dimensions.get('window');
 
 class SearchDetails extends React.Component {
@@ -140,9 +141,7 @@ class SearchDetails extends React.Component {
             <View style={styles.container}>
                 <ScrollView style={styles.scrollContainer}>
                     <Carousel style={{width: width, height: 200}}>
-                        <Image style={{width: width, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}/>
-                        <Image style={{width: width, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}/>
-                        <Image style={{width: width, height: 200}} source={{uri: 'http://www.mademoiselleclaudine-leblog.com/wp-content/uploads/2014/11/SFD8B0C4B51B199404BAAEE3ABC34ED36AB.jpg'}}/>
+                        {user.home.photos.map((photo) => <Image style={{width: width, height: 200}} source={{uri: photo.value}}/>)}
                     </Carousel>
                     <View style={styles.content}>
                         <Text style={styles.title}>{user.firstName} {user.lastName}, {user.age()} ans</Text>
