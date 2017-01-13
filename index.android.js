@@ -49,8 +49,11 @@ const scenes = Actions.create(
             <Scene key="search_home" component={Search} title="Rechercher"/>
             <Scene key="search_details" hideTabBar component={SearchDetails} title="Détails du logement"/>
           </Scene> 
-          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil" hideNavBar/>
-          <Scene key="messages" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Messages} title="Messages"/>
+          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil"/>
+          <Scene key="messages" navigationBarStyle={styles.navigationBarStyle} title="Messages" titleStyle={styles.titleStyle} icon={TabIcon} leftButtonIconStyle ={{ tintColor:'white'}}>
+            <Scene key="message_home" component={Messages} title="Messages" hideNavBar/>
+            <Scene key="message_details" hideTabBar component={Conversation} title="Détails de la conversation" hideNavBar={false}/>
+          </Scene>
         </Scene>
       </Scene>
     </Scene>
