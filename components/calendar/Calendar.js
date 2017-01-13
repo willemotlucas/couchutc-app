@@ -112,28 +112,21 @@ var monthNames = [
     "Nov", "Dec"
 ];
 
+const singleGuest = "1 voyageur";
+
 class Calendar extends React.Component {
     constructor(props) {
         super(props);
-        var dates = [];
+
         var currentDate = new Date().toJSON().slice(0,10);
+        let hostingRequests = realm.objects('HostingRequest');
+        var currentUserId = 1;
+        let results = hostingRequests.filtered(`host_id = ${currentUserId} and status= "accepted"`);
+        
+        var eventDates = this.getRequestsDate(results);
         var dataSource = new ListView.DataSource(
             {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url}
         );
-        var eventDates = [];
-        let hostingRequests = realm.objects('HostingRequest');
-        var currentUserId = 1;
-        let results = hostingRequests.filtered(`host_id = ${currentUserId}`);
-        Object.keys(results).forEach(function(key) {
-            var startingDate = results[key].startingDate;
-            var endingDate = results[key].endingDate;
-            var currentDate = new Date(startingDate.getTime());
-
-            while (currentDate <= endingDate) {
-                eventDates.push(new Date(currentDate).toJSON().slice(0,10));
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-        });
 
         this.state = {
             currentDate: currentDate,
@@ -155,8 +148,21 @@ class Calendar extends React.Component {
             nbGuests: '',
             message: ''
         }
+    }
 
-        console.log(this.state.eventDates);
+    getRequestsDate(results) {
+        var eventDates = [];
+        Object.keys(results).forEach(function(key) {
+            var startingDate = results[key].startingDate;
+            var endingDate = results[key].endingDate;
+            var date = new Date(startingDate.getTime());
+
+            while (date <= endingDate) {
+                eventDates.push(new Date(date).toJSON().slice(0,10));
+                date.setDate(date.getDate() + 1);
+            }
+        });
+        return eventDates;
     }
 
     onDateSelected(date) {
@@ -236,6 +242,12 @@ class Calendar extends React.Component {
         } else {
             avatar = <Image source={{uri: '././resources/users.png'}}/>
         }
+        var nbGuest = null;
+        if (rowData['request'].numberOfGuest == 1) {
+            nbGuest = singleGuest;
+        } else {
+            nbGuest = rowData['request'].numberOfGuest + " voyageurs";
+        }
         return (
             <View>
                 <View>
@@ -247,7 +259,7 @@ class Calendar extends React.Component {
                         rowData['guest'].age(),
                         rowData['request'].startingDate,
                         rowData['request'].endingDate,
-                        rowData['request'].numberOfGuest,
+                        nbGuest,
                         rowData['request'].message
                         )}>
                     <View style={styles.hostingRow}>
@@ -262,7 +274,7 @@ class Calendar extends React.Component {
                             <View style={styles.inlineBlocks}>
                                 <Icon name='users' size={15} style={styles.icon}/>
                                 <Text
-                                numberOfLines={1}>{rowData['request'].numberOfGuest} voyageurs</Text>
+                                numberOfLines={1}>{nbGuest}</Text>
                             </View>
                         </View>
                         <View>
@@ -327,7 +339,7 @@ class Calendar extends React.Component {
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="users" size={28} style={styles.icon} />
-                            <Text>{this.state.nbGuests} voyageurs</Text>
+                            <Text>{this.state.nbGuests}</Text>
                         </View>
                         <View>
                             <Text>Message de {this.state.firstName}</Text>
