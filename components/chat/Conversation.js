@@ -19,9 +19,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "#F5FCFF",
         width: Dimensions.get('window').width,
-        position: 'absolute',
-        top: 55,
-        height: Dimensions.get('window').height - 75,
+        height: Dimensions.get('window').height - 25,
     },
     footerContainer: {
 	    marginTop: 5,
@@ -85,7 +83,7 @@ class Conversation extends React.Component {
         return conversation;
     }
 
-    formatData(conversation) { // TODO TEST FUNCTION
+    formatData(conversation) {
 		var dataForList = [];
 		var cpt = 0;
 		var currentUserData = this.state.currentUser;
