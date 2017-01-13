@@ -15,6 +15,7 @@ import SearchDetails from './components/search/SearchDetails';
 import Profile from './components/profile/Profile';
 import Calendar from './components/calendar/Calendar';
 import Messages from './components/chat/Messages';
+import Conversation from './components/chat/Conversation';
 import TabView from './components/common/TabView';
 import TabIcon from './components/common/TabIcon';
 
@@ -49,8 +50,11 @@ const scenes = Actions.create(
             <Scene key="search_home" component={Search} title="Rechercher"/>
             <Scene key="search_details" hideTabBar component={SearchDetails} title="Détails du logement"/>
           </Scene> 
-          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil" hideNavBar/>
-          <Scene key="messages" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Messages} title="Messages"/>
+          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil"/>
+          <Scene key="messages" navigationBarStyle={styles.navigationBarStyle} title="Messages" titleStyle={styles.titleStyle} icon={TabIcon} leftButtonIconStyle = {{ tintColor:'white'}}>
+            <Scene key="message_home" component={Messages} title="Messages"/>
+            <Scene key="message_details" hideTabBar component={Conversation} title="Détails de la conversation"/>
+          </Scene>
         </Scene>
       </Scene>
     </Scene>
