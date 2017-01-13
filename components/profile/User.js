@@ -6,10 +6,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modalbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Real from 'realm';
-
-import Users from '../../models/User';
-import Home from '../../models/Home';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     container: {
@@ -69,8 +66,6 @@ var styles = StyleSheet.create({
         marginRight: 10
     }
 });
-
-let realm = new Realm({schema: [Users, Home]});
 
 class User extends React.Component {
     constructor(props) {

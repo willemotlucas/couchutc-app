@@ -2,10 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from "react-native";
 import {Actions} from "react-native-router-flux";
 
-import Real from 'realm';
-
-import Users from '../../models/User';
-import Home from '../../models/Home';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     container: {
@@ -46,8 +43,6 @@ var styles = StyleSheet.create({
         padding: 5
     },
 });
-
-let realm = new Realm({schema: [Users, Home]});
 
 const singleGuest = "1 voyageur";
 
