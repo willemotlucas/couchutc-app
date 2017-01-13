@@ -12,7 +12,6 @@ var styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#F5FCFF",
-        marginTop: 50
     }
 });
 
@@ -25,7 +24,7 @@ class Messages extends React.Component {
     render(){
         return (
             <View style={styles.container}>
-                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
+                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#009286" tabBarUnderlineStyle={{color: "white", borderWidth: 0}}/>}>
                     <Chat tabLabel="Conversations" refresh={true}/>
                     <Requests tabLabel="Demandes" />
                 </ScrollableTabView>
