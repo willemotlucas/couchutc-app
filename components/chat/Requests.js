@@ -11,10 +11,9 @@ import Modal from 'react-native-modalbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Button from 'apsl-react-native-button'
+import Toast from 'react-native-root-toast';
 
-import Realm from 'realm';
-import User from '../../models/User';
-import HostingRequest from '../../models/HostingRequest';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     container: {
@@ -83,9 +82,6 @@ var monthNames = [
     "Nov", "Dec"
 ];
 
-
-let realm = new Realm({schema: [User, HostingRequest]});
-
 const onButtonPress = () => {
     Alert.alert('Button has been pressed!');
 };
@@ -94,25 +90,17 @@ class Requests extends React.Component {
     constructor(props) {
         super(props);
 
-        var dataForList = [];
-        let requests = realm.objects('HostingRequest');
-        Object.keys(requests).forEach(function(key) {
-            let users = realm.objects('User');
-            let guests = users.filtered(`id = ${requests[key].guest_id}`);
-
-            dataForList.push({
-                request: requests[key],
-                user: guests[0]
-            });
-        });
-
+        var dataForList = this.getDataForList();
+        var currentUser = 1;
         var dataSource = new ListView.DataSource(
           {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
         this.state = {
             dataSource: dataSource.cloneWithRows(dataForList),
+            interlocutorId: '',
             firstName: '',
             lastName: '',
             age: '',
+            requestId: '',
             startingDate: '',
             startingHour: '',
             endingDate: '',
@@ -123,11 +111,40 @@ class Requests extends React.Component {
             isOpen: false,
             isDisabled: false,
             swipeToClose: true,
-            sliderValue: 0.3
+            sliderValue: 0.3,
+            currentUserId: currentUser,
+            toastVisible: false
         };
     }
 
-    onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message) {
+    getDataForList() {
+        var currentUser = 1;
+        let requests = realm.objects('HostingRequest').filtered(`(guest_id = ${currentUser} or host_id = ${currentUser}) and status = "pending"`);
+
+        return this.formatDataForList(requests);
+    }
+
+    formatDataForList(requests) {
+        var currentUser = 1;
+        var dataForList = [];
+        Object.keys(requests).forEach(function(key) {
+            if (requests[key].guest_id == currentUser) {
+                var userToDisplay = requests[key].host_id;
+            } else {
+                var userToDisplay = requests[key].guest_id;
+            }
+            let users = realm.objects('User');
+            let guests = users.filtered(`id = ${userToDisplay}`);
+
+            dataForList.push({
+                request: requests[key],
+                user: guests[0]
+            });
+        });
+        return dataForList;
+    }
+
+    onHostingRequestPressed(id, firstName, lastName, age, requestId, startingDate, endingDate, nbGuests, message) {
         //format minutes
         var startingMin = null;
         if (startingDate.getMinutes() < 10) {
@@ -142,9 +159,11 @@ class Requests extends React.Component {
             endingMin = endingDate.getMinutes();
         }
         this.setState({
+            interlocutorId: id,
             firstName: firstName,
             lastName: lastName,
             age: age,
+            requestId: requestId,
             startingDate: startingDate.getDate() + ' ' + monthNames[startingDate.getMonth()],
             startingHour: startingDate.getHours() + 'h' + startingMin,
             endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
@@ -154,10 +173,55 @@ class Requests extends React.Component {
         });
 
         this.refs.detailsRequest.open();
+
     }
 
     closeRequestDetails() {
         this.refs.detailsRequest.close();
+    }
+
+    acceptHostingRequest(id) {
+        let request = realm.objects('HostingRequest').filtered(`id = ${id}`)[0];
+        realm.write(() => {
+          request.status = "accepted";
+        });
+        this.refresh();
+        this.refs.detailsRequest.close();
+    }
+
+    refuseHostingRequest(id) {
+        let request = realm.objects('HostingRequest').filtered(`id = ${id}`)[0];
+        realm.write(() => {
+          request.status = "cancelled";
+        });
+        this.refresh();
+        this.refs.detailsRequest.close();
+    }
+
+    refresh() {
+        var dataForList = this.getDataForList();
+        var dataSource = new ListView.DataSource(
+            {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
+        this.setState({
+            dataSource: dataSource.cloneWithRows(dataForList)
+        });
+    }
+
+    displayToast(message) {
+        // Add a Toast on screen.
+        let toast = Toast.show(message, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0
+        });
+
+        // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+        setTimeout(function () {
+            Toast.hide(toast);
+        }, 800);
     }
 
     renderRow(rowData, sectionID, rowID) {
@@ -168,7 +232,7 @@ class Requests extends React.Component {
             //Add picture
         }
         var receivedPicture = null;
-        if (!rowData.received) {
+        if (rowData['request'].guest_id === this.state.currentUserId) {
             receivedPicture = <MaterialIcons name='call-made' size={40} style={{color: '#00A799', position: 'absolute', right: 10, top: 15}}/>
         } else {
             receivedPicture = <MaterialIcons name='call-received' size={40} style={{color: '#F94351', position: 'absolute', right: 10, top: 15}}/>;
@@ -178,9 +242,11 @@ class Requests extends React.Component {
                 <View style={styles.row}>
                     <TouchableHighlight
                     onPress={() => this.onHostingRequestPressed(
+                    rowData['user'].id,
                     rowData['user'].firstName,
                     rowData['user'].lastName,
                     rowData['user'].age(),
+                    rowData['request'].id,
                     rowData['request'].startingDate,
                     rowData['request'].endingDate,
                     rowData['request'].numberOfGuest,
@@ -246,10 +312,10 @@ class Requests extends React.Component {
                         </View>
                     </View>
                     <View style={styles.buttons}>
-                            <Button style={{backgroundColor: '#00A799', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}}>
+                            <Button style={{backgroundColor: '#00A799', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}} onPress={() => this.acceptHostingRequest(this.state.requestId)}>
                                 Accepter la demande
                             </Button>
-                            <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}}>
+                            <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}} onPress={() => Actions.message_details({interlocutor: this.state.interlocutorId, refresh: this.refresh})}>
                                 Demander plus d'informations
                             </Button>
                             <Button style={{backgroundColor: '#F94351', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}}>

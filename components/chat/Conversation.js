@@ -7,9 +7,7 @@ import {
 } from "react-native";
 import Button from 'react-native-button';
 
-import Realm from 'realm';
-import Message from '../../models/Message';
-import User from '../../models/User';
+import realm from '../../models/realm';
 
 import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
 
@@ -19,9 +17,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "#F5FCFF",
         width: Dimensions.get('window').width,
-        position: 'absolute',
-        top: 55,
-        height: Dimensions.get('window').height - 75,
+        height: Dimensions.get('window').height - 25,
     },
     footerContainer: {
 	    marginTop: 5,
@@ -35,8 +31,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-let realm = new Realm({schema: [Message, User]});
-
 //demo answers
 var counter = 0;
 const answers = ['Oui bien sur, je serais la pour vous accueilllir', 'pas de problème'];
@@ -44,7 +38,7 @@ const answers = ['Oui bien sur, je serais la pour vous accueilllir', 'pas de pro
 class Conversation extends React.Component {
 	constructor(props) {
 		super(props);
-		var user = this.props.user;
+		var user = this.props.interlocutor;
 		let users = realm.objects('User');
 		var currentUser = users.filtered(`id = "${1}"`);
 		var interlocutor = users.filtered(`id = "${user}"`);
@@ -85,7 +79,7 @@ class Conversation extends React.Component {
         return conversation;
     }
 
-    formatData(conversation) { // TODO TEST FUNCTION
+    formatData(conversation) {
 		var dataForList = [];
 		var cpt = 0;
 		var currentUserData = this.state.currentUser;

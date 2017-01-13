@@ -74,8 +74,8 @@ class SearchDate extends React.Component {
         super();
         this.state = {
             startDate: null,
-            endDate: null,
             startDateString: "Date d'arrivée",
+            endDate: null,
             endDateString: "Date de départ",
             numberOfDateSelected: 0
         }

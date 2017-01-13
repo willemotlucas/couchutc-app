@@ -4,14 +4,10 @@ import {Actions} from "react-native-router-flux";
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Button from 'react-native-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Realm from 'realm';
 import Carousel from 'react-native-looped-carousel';
 import Modal from 'react-native-modalbox';
 
-import User from '../../models/User';
-import Home from '../../models/Home';
-import HomeImage from '../../models/Image';
-import HostingRequest from '../../models/HostingRequest';
+import realm from '../../models/realm';
 import DateFormat from '../common/DateFormat';
 
 var styles = StyleSheet.create({
@@ -88,7 +84,6 @@ var styles = StyleSheet.create({
     }
 });
 
-let realm = new Realm({schema: [User, Home, HostingRequest, HomeImage]});
 const { width, height } = Dimensions.get('window');
 
 class SearchDetails extends React.Component {

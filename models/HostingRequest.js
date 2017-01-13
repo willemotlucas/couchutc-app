@@ -1,9 +1,10 @@
 import Realm from 'realm';
 
-const HostingRequestSchema = {
+export default class HostingRequest extends Realm.Object { }
+HostingRequest.schema = {
   name: 'HostingRequest',
   properties: {
-  	id: 'int',
+    id: 'int',
     startingDate: 'date',
     endingDate: 'date',
     numberOfGuest: 'int',
@@ -15,12 +16,3 @@ const HostingRequestSchema = {
     host_id: 'int'
   }
 };
-
-class HostingRequest {
-
-}
-
-HostingRequest.schema = HostingRequestSchema;
-
-
-module.exports = HostingRequest;

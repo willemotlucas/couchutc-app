@@ -1,11 +1,4 @@
-import Realm from 'realm';
-import User from './User';
-import Home from './Home';
-import Image from './Image';
-import Message from './Message';
-import HostingRequest from './HostingRequest';
-
-let realm = new Realm({schema: [User, Home, HostingRequest, Message, Image]});
+import realm from './realm';
 
 const FakeData = {
 
@@ -34,7 +27,31 @@ const FakeData = {
 			    updatedAt: new Date(),
 			    guest_id: 2,
 			    host_id: 1
-    		}
+    		},
+    		{
+	        	id: 3,
+	        	startingDate: new Date('2017-02-14'),
+			    endingDate: new Date('2017-02-17'),
+			    numberOfGuest: 1,
+			    message: 'Je viens pour visiter',
+			    status: 'pending',
+			    createdAt: new Date(),
+			    updatedAt: new Date(),
+			    guest_id: 3,
+			    host_id: 1
+	    	},
+	    	{
+	        	id: 4,
+	        	startingDate: new Date('2017-02-14'),
+			    endingDate: new Date('2017-02-17'),
+			    numberOfGuest: 1,
+			    message: 'Ne pas passer à autre status',
+			    status: 'pending',
+			    createdAt: new Date(),
+			    updatedAt: new Date(),
+			    guest_id: 2,
+			    host_id: 1
+	    	},
 		];
 
         realm.write(() => {

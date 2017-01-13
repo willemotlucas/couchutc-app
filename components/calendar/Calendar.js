@@ -13,10 +13,7 @@ import CalendarComponent from 'react-native-calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modalbox';
 
-import Realm from 'realm';
-import User from '../../models/User';
-import Home from '../../models/Home';
-import HostingRequest from '../../models/HostingRequest';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     container: {
@@ -114,8 +111,6 @@ var monthNames = [
     "Aout", "Sept", "Oct",
     "Nov", "Dec"
 ];
-
-let realm = new Realm({schema: [User, HostingRequest]});
 
 class Calendar extends React.Component {
     constructor(props) {

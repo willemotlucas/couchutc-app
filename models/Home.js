@@ -1,9 +1,10 @@
 import Realm from 'realm';
 
-const HomeSchema = {
+export default class Home extends Realm.Object { }
+Home.schema = {
   name: 'Home',
   properties: {
-  	id: 'int',
+    id: 'int',
     country: 'string',
     city: 'string',
     propertyType: 'string',
@@ -14,12 +15,3 @@ const HomeSchema = {
     photos: {type: 'list', objectType: 'Image'}
   }
 };
-
-class Home {
-
-}
-
-Home.schema = HomeSchema;
-
-
-module.exports = Home;
