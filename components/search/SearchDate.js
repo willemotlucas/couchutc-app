@@ -76,8 +76,10 @@ class SearchDate extends React.Component {
     constructor() {
         super();
         this.state = {
-            startDate: "Date d'arrivée",
-            endDate: "Date de départ",
+            startDate: null,
+            startDateString: "Date d'arrivée",
+            endDate: null,
+            endDateString: "Date de départ",
             numberOfDateSelected: 0
         }
 
@@ -89,7 +91,8 @@ class SearchDate extends React.Component {
 
         if(current != undefined && previous == undefined) {
             this.setState({
-                startDate: current.toLocaleDateString('fr', dateOption),
+                startDate: new Date(current),
+                startDateString: current.toLocaleDateString('fr', dateOption),
                 numberOfDateSelected: this.state.numberOfDateSelected + 1
             });            
         }
@@ -97,27 +100,32 @@ class SearchDate extends React.Component {
         if(current != undefined && previous != undefined) {
             if(current > previous && this.state.numberOfDateSelected == 1) {
                 this.setState({
-                    startDate: previous.toLocaleDateString('fr', dateOption),
-                    endDate: current.toLocaleDateString('fr', dateOption),
+                    startDate: new Date(previous),
+                    startDateString: previous.toLocaleDateString('fr', dateOption),
+                    endDate: new Date(current),
+                    endDateString: current.toLocaleDateString('fr', dateOption),
                     numberOfDateSelected: this.state.numberOfDateSelected + 1
                 });
             } else if (this.state.numberOfDateSelected == 2){
                 this.setState({
-                    startDate: current.toLocaleDateString('fr', dateOption),
-                    endDate: "Date de départ",
+                    startDate: new Date(current),
+                    startDateString: current.toLocaleDateString('fr', dateOption),
+                    endDate: null,
+                    endDateString: "Date de départ",
                     numberOfDateSelected: 1
                 });
             } else if(this.state.numberOfDateSelected == 1 && previous > current){
                 this.setState({
-                    startDate: current.toLocaleDateString('fr', dateOption)
+                    startDate: new Date(current),
+                    startDateString: current.toLocaleDateString('fr', dateOption)
                 });
             }
         }
     }
 
     onSaveButtonPressed() {
-        var startDate = new Date(this.state.startDate);
-        var endDate = new Date(this.state.endDate);
+        var startDate = this.state.startDate;
+        var endDate = this.state.endDate;
 
         // if(startDate instanceof Date && !isNaN(startDate.valueOf()) && endDate instanceof Date && !isNaN(endDate.valueOf())){
             this.props.onPickDate(startDate, endDate);
@@ -129,9 +137,9 @@ class SearchDate extends React.Component {
         return (
             <View style={styles.modalContainer}>
                 <View style={styles.datesContainer}>
-                    <Text style={styles.dates}>{this.state.startDate}</Text>
+                    <Text style={styles.dates}>{this.state.startDateString}</Text>
                     <Text style={styles.datesSeparator}>/</Text>
-                    <Text style={styles.dates}>{this.state.endDate}</Text>
+                    <Text style={styles.dates}>{this.state.endDateString}</Text>
                 </View>
                 <Calendar
                     style={styles.calendarContainer}

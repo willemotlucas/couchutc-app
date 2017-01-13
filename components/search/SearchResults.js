@@ -7,10 +7,7 @@ import Button from 'react-native-button';
 import { Card, CardImage, CardTitle, CardContent, CardAction } from 'react-native-card-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Realm from 'realm';
-import User from '../../models/User';
-import Home from '../../models/Home';
-import HostingRequest from '../../models/HostingRequest';
+import realm from '../../models/realm';
 
 var styles = StyleSheet.create({
     resultsContainer: {
@@ -36,7 +33,6 @@ var styles = StyleSheet.create({
     }
 });
 
-let realm = new Realm({schema: [User, Home, HostingRequest]});
 const { width, height } = Dimensions.get('window');
 
 class SearchResults extends React.Component {

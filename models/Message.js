@@ -1,9 +1,10 @@
 import Realm from 'realm';
 
-const MessageSchema = {
+export default class Message extends Realm.Object { }
+Message.schema = {
   name: 'Message',
   properties: {
-  	id: 'int',
+    id: 'int',
     sendAt: 'date',
     message: 'string',
     createdAt: 'date',
@@ -12,12 +13,3 @@ const MessageSchema = {
     to_user_id: 'int'
   }
 };
-
-class Message {
-
-}
-
-Message.schema = MessageSchema;
-
-
-module.exports = Message;
