@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from "react-native";
+import {View, Text, StyleSheet, Image, Dimensions} from "react-native";
 import {Actions} from "react-native-router-flux";
 import { Sae } from 'react-native-textinput-effects';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -16,9 +16,6 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: "center",
         backgroundColor: "#F5FCFF",
-    },
-    textInput: {
-        margin: 10,
     },
     textInputLabel: {
         color: 'grey',
@@ -37,6 +34,16 @@ const styles = StyleSheet.create({
     labelButton: {
         color: 'white', 
         fontSize: 20
+    },
+    img: {
+        width: Dimensions.get('window').width,
+        height: 200,
+        position: 'absolute',
+        left: 0,
+        top: 25
+    },
+    loginForm: {
+        marginTop: 250
     }
 });
 
@@ -81,12 +88,14 @@ export default class extends React.Component {
 
         return (
             <View style={[styles.container, this.props.style]}>
-                <FontAwesomeIcon name="home" size={200} style={{alignSelf: 'center', marginBottom: 20}}/>
-                <Sae label={'Email'} ref="email" style={styles.textInput} labelStyle={styles.textInputLabel} inputStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'grey'} iconName={'user'}/>
-                <Sae label={'Mot de passe'} secureTextEntry={true} ref="password" style={styles.textInput} labelStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} inputStyle={styles.textInputLabel} iconColor={'grey'} iconName={'unlock'}/>
-                <Text style={styles.warning}>{this.state.message}</Text>
-                <Button style={[styles.button, {marginTop: 20}]} onPress={() => this.authenticate()}><Text style={styles.labelButton}>Se connecter</Text></Button>
-                <Button style={styles.button} onPress={() => Actions.register()}><Text style={styles.labelButton}>S'inscrire</Text></Button>
+                <Image style={styles.img} source={require('../../resources/compy.png')}/>
+                <View style={styles.loginForm}>
+                    <Sae label={'Email'} ref="email" labelStyle={styles.textInputLabel} inputStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'grey'} iconName={'user'}/>
+                    <Sae label={'Mot de passe'} secureTextEntry={true} ref="password" style={styles.textInput} labelStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} inputStyle={styles.textInputLabel} iconColor={'grey'} iconName={'unlock'}/>
+                    <Text style={styles.warning}>{this.state.message}</Text>
+                    <Button style={[styles.button, {marginTop: 20}]} onPress={() => this.authenticate()}><Text style={styles.labelButton}>Se connecter</Text></Button>
+                    <Button style={styles.button} onPress={() => Actions.register()}><Text style={styles.labelButton}>S'inscrire</Text></Button>
+                </View>
             </View>
         );
     }
