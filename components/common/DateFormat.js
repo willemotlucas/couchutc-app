@@ -27,6 +27,7 @@ const DateFormat = {
 	// Return ["Jan.", "Fev." ...]
 	getShortWeekDays: () => {
 		return shortWeekDays;
+		
 	}
 }
 
