@@ -44,7 +44,7 @@ var styles = StyleSheet.create({
     },
     chevronRight: {
         position: 'relative', 
-        left: 180
+        left: 160
     },
     modal: {
         flexDirection: 'row',
@@ -267,7 +267,7 @@ class Calendar extends React.Component {
                         rowData['guest'].profilePicture.value
                         )}>
                     <View style={styles.hostingRow}>
-                        <Image style={styles.circle} source={{uri: rowData['guest'].profilePicture.value}}/>
+                        <Image style={[styles.circle, {marginRight: 15, marginLeft: 10}]} source={{uri: rowData['guest'].profilePicture.value}}/>
                         <View>
                             <Text style={{fontWeight: 'bold'}}>{rowData['guest'].firstName} {rowData['guest'].lastName}</Text>
                             <View style={styles.inlineBlocks}>
