@@ -14,7 +14,7 @@ User.schema = {
     lastName: 'string',
     birthday: 'date',
     gender: 'string',
-    profilePicture: {type: 'data', optional: true},
+    profilePicture: {type: 'Image', optional: true},
     biography: 'string',
     visitedCountries: 'string',
     smoker: 'bool',

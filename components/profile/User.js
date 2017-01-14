@@ -15,11 +15,11 @@ var styles = StyleSheet.create({
         backgroundColor: "#FAFAFA"
     },
     circle: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: "#CACACA",
+        width: 120,
+        height: 120,
+        borderRadius: 60,
         marginTop: 13,
+        marginBottom: 10,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -33,8 +33,9 @@ var styles = StyleSheet.create({
     }, 
     header: {
         backgroundColor: '#00A799',
-        height: 150,
-        alignItems: 'center'
+        height: 187,
+        alignItems: 'center',
+        marginTop: 13
     },
     text: {
         backgroundColor: 'white',
@@ -113,22 +114,18 @@ class User extends React.Component {
     }
 
     render() {
-        var profilePicture = this.state.user.profilePicture;
+        var profilePicture = null;
         if (this.state.user.profilePicture == null) {
             profilePicture = <Image style={{width: 70, height: 70}} source={require('../../resources/user.png')}/>;
         } else {
-            profilePicture = <Image style={{width: 70, height: 70}} source={profilePicture}/>;
+            profilePicture = <Image style={{width: 70, height: 70}} source={this.state.user.profilePicture.value}/>;
         }
         return (
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.header}>
-                        <TouchableOpacity
-                        onPress={() => this.openEditProfilePicture()}
-                        >
-                            <View style={styles.circle}> 
-                                {profilePicture}
-                            </View>
+                        <TouchableOpacity onPress={() => this.openEditProfilePicture()}>
+                            <Image style={styles.circle} source={{uri: this.state.user.profilePicture.value}}/>                            
                         </TouchableOpacity>
                         <Text style={styles.title}>{this.state.user.firstName} {this.state.user.lastName}</Text>
                     </View>

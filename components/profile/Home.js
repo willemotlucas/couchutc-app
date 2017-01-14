@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from "react-native";
+import {View, Text, StyleSheet, ScrollView, Dimensions, Image} from "react-native";
 import {Actions} from "react-native-router-flux";
+import Carousel from 'react-native-looped-carousel';
 
 import realm from '../../models/realm';
 
@@ -45,6 +46,7 @@ var styles = StyleSheet.create({
 });
 
 const singleGuest = "1 voyageur";
+const { width, height } = Dimensions.get('window');
 
 class User extends React.Component {
     constructor() {
@@ -65,10 +67,9 @@ class User extends React.Component {
         return (
             <View style={styles.container}>
                 <ScrollView>
-                    <View style={styles.header}>
-                        <View style={styles.circle}/>
-                        <Text style={styles.title}>{user.firstName} {user.lastName}</Text>
-                    </View>
+                    <Carousel style={{width: width, height: 200}}>
+                        {user.home.photos.map((photo) => <Image style={{width: width, height: 200}} source={{uri: photo.value}}/>)}
+                    </Carousel>
                     <View style={styles.content}>
                         <View style={styles.section}>
                             <Text style={styles.label}>Localisation</Text>
