@@ -33,9 +33,8 @@ var styles = StyleSheet.create({
     }, 
     header: {
         backgroundColor: '#00A799',
-        height: 187,
+        height: 200,
         alignItems: 'center',
-        marginTop: 13
     },
     text: {
         backgroundColor: 'white',
