@@ -40,7 +40,7 @@ class Conversation extends React.Component {
 		super(props);
 		var user = this.props.interlocutor;
 		let users = realm.objects('User');
-		var currentUser = users.filtered(`id = "${1}"`);
+		var currentUser = users.filtered(`id = "${realm.objects('AuthenticatedUser')[0].id}"`);
 		var interlocutor = users.filtered(`id = "${user}"`);
 
 		this.state = {
@@ -108,7 +108,7 @@ class Conversation extends React.Component {
 		var userFormatted = {
 			_id: user.id,
 			name: user.firstName + ' ' + user.lastName,
-			avatar: 'https://facebook.github.io/react/img/logo_og.png'
+			avatar: user.profilePicture.value
 		};
 		return userFormatted;
 	}

@@ -5,7 +5,8 @@ import {
     StyleSheet,
     ListView,
     TouchableHighlight,
-    LayoutAnimation
+    LayoutAnimation,
+    Image
 } from "react-native";
 import {Actions} from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -39,7 +40,14 @@ var styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold'
-    }
+    },
+    circle: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
 
 var monthNames = [
@@ -75,7 +83,8 @@ class Chat extends React.Component {
     getLastMessageOfConversations(messages) {
         var conversations = new Object();
         var interlocutor = null;
-        var currentUserId = 1;
+        var currentUserId = realm.objects('AuthenticatedUser')[0].id;
+        
         Object.keys(messages).forEach(function (key) {
             if (messages[key].from_user_id === currentUserId) {
                 interlocutor = messages[key].to_user_id;
@@ -115,12 +124,6 @@ class Chat extends React.Component {
     }
 
     renderRow(rowData, sectionID, rowID) {
-        var avatar = null;
-        if (rowData['user'].profilePicture == null) {
-            avatar = <Icon name="user" size={50} style={{marginLeft: 15, marginRight: 15}}/>
-        } else {
-            //Add picture
-        }
         var dateLastMessage = null;
         if (rowData['message'].sendAt.toJSON().slice(0,10) == new Date().toJSON().slice(0,10)) {
             var min = null;
@@ -140,7 +143,7 @@ class Chat extends React.Component {
                     onPress={() => Actions.message_details({interlocutor: rowData['user'].id, refresh: this.refresh})}
                     underlayColor='#dddddd'>
                         <View style={styles.conversationRow}>
-                            {avatar}
+                            <Image style={[styles.circle, {marginRight: 15, marginLeft: 10}]} source={{uri: rowData['user'].profilePicture.value}}/> 
                             <View style={styles.message}>
                                 <Text style={styles.label}>{rowData['user'].firstName} {rowData['user'].lastName}</Text>
                                 <Text numberOfLines={1}>{rowData['message'].message}</Text>
