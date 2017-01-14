@@ -12,6 +12,7 @@ import realm from '../../models/realm';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        top: 25,
         padding: 10,
         justifyContent: "center",
         backgroundColor: "#F5FCFF",
@@ -20,18 +21,22 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     textInputLabel: {
-        color: '#009286'
+        color: 'grey',
     },
     button: {
         backgroundColor: "#009286", 
         borderColor: 'transparent',
         position: 'relative',
-        top: 130
+        top: 30
     },
     warning: {
         color: '#F94351',
         fontSize: 20,
         paddingLeft: 10
+    },
+    labelButton: {
+        color: 'white', 
+        fontSize: 20
     }
 });
 
@@ -60,8 +65,14 @@ export default class extends React.Component {
                 realm.write(() => {
                     realm.create('AuthenticatedUser', {id: results[0].id});
                 });
+                this.refs.email.clear();
+                this.refs.password.clear();
                 Actions.tabbar();
             }
+        } else {
+            this.setState({
+                message: "Veuillez rentrer des identifiants corrects"
+            });
         }
     }
 
@@ -70,12 +81,12 @@ export default class extends React.Component {
 
         return (
             <View style={[styles.container, this.props.style]}>
-                <FontAwesomeIcon name="home" size={100} style={{alignSelf: 'center'}}/>
-                <Sae label={'Email'} ref="email" style={styles.textInput} labelStyle={styles.textInputLabel} inputStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'#009286'} iconName={'user'}/>
-                <Sae label={'Mot de passe'} ref="password" style={styles.textInput} labelStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} inputStyle={styles.textInputLabel} iconColor={'#009286'} iconName={'unlock'}/>
+                <FontAwesomeIcon name="home" size={200} style={{alignSelf: 'center', marginBottom: 20}}/>
+                <Sae label={'Email'} ref="email" style={styles.textInput} labelStyle={styles.textInputLabel} inputStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'grey'} iconName={'user'}/>
+                <Sae label={'Mot de passe'} secureTextEntry={true} ref="password" style={styles.textInput} labelStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} inputStyle={styles.textInputLabel} iconColor={'grey'} iconName={'unlock'}/>
                 <Text style={styles.warning}>{this.state.message}</Text>
-                <Button style={styles.button} onPress={() => this.authenticate()}><Text style={{color: 'white'}}>Se connecter</Text></Button>
-                <Button style={styles.button} onPress={() => Actions.register()}><Text style={{color: 'white'}}>S'inscrire</Text></Button>
+                <Button style={[styles.button, {marginTop: 20}]} onPress={() => this.authenticate()}><Text style={styles.labelButton}>Se connecter</Text></Button>
+                <Button style={styles.button} onPress={() => Actions.register()}><Text style={styles.labelButton}>S'inscrire</Text></Button>
             </View>
         );
     }
