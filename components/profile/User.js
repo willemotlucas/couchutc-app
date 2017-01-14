@@ -127,6 +127,10 @@ class User extends React.Component {
         } else {
             profilePicture = <Image style={{width: 70, height: 70}} source={this.state.user.profilePicture.value}/>;
         }
+        var logOutButton = null;
+        if (this.state.user.id == realm.objects('AuthenticatedUser')[0].id) {
+            var logOutButton = <Button style={{backgroundColor: '#F94351', borderColor: 'transparent'}} onPress={() => this.logout()}><Text style={{color: 'white', fontSize: 20}}>Déconnexion</Text></Button>
+        }
         return (
             <View style={styles.container}>
                 <ScrollView>
@@ -161,7 +165,7 @@ class User extends React.Component {
                             <Text style={styles.label}>Pays visités</Text>
                             <Text style={styles.text}>{this.state.user.visitedCountries}</Text>
                         </View>
-                        <Button style={{backgroundColor: '#F94351', borderColor: 'transparent'}} onPress={() => this.logout()}><Text style={{color: 'white', fontSize: 20}}>Déconnexion</Text></Button>
+                        {logOutButton}
                     </View>
                 </ScrollView>
                 <Modal style={styles.modal} position={"center"} ref={"choosePictureFrom"}>
