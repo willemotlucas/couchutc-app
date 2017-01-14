@@ -112,6 +112,14 @@ class User extends React.Component {
         this.refs.choosePictureFrom.close();
     }
 
+    logout() {
+        realm.write(() => {
+          let authUser = realm.objects('AuthenticatedUser');
+          realm.delete(authUser);
+        });
+        Actions.login({type: 'reset'});
+    }
+
     render() {
         var profilePicture = null;
         if (this.state.user.profilePicture == null) {
@@ -153,7 +161,7 @@ class User extends React.Component {
                             <Text style={styles.label}>Pays visités</Text>
                             <Text style={styles.text}>{this.state.user.visitedCountries}</Text>
                         </View>
-                        <Button style={{backgroundColor: '#F94351', borderColor: 'transparent'}}><Text style={{color: 'white', fontSize: 20}}>Déconnexion</Text></Button>
+                        <Button style={{backgroundColor: '#F94351', borderColor: 'transparent'}} onPress={() => this.logout()}><Text style={{color: 'white', fontSize: 20}}>Déconnexion</Text></Button>
                     </View>
                 </ScrollView>
                 <Modal style={styles.modal} position={"center"} ref={"choosePictureFrom"}>

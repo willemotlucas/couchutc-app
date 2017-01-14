@@ -24,5 +24,7 @@ User.schema = {
     createdAt: 'date',
     updatedAt: 'date',
     home: 'Home',
+    mail:'string',
+    password:'string'
   }
 };
