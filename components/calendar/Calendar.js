@@ -49,7 +49,7 @@ var styles = StyleSheet.create({
     modal: {
         flexDirection: 'row',
         marginTop: 15,
-        height: 350,
+        height: 365,
         width: 350,
         borderRadius: 10
     },
@@ -71,6 +71,13 @@ var styles = StyleSheet.create({
     },
     lineDetails: {
         marginBottom: 8
+    },
+    circle: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 });
 
@@ -120,7 +127,7 @@ class Calendar extends React.Component {
 
         var currentDate = new Date().toJSON().slice(0,10);
         let hostingRequests = realm.objects('HostingRequest');
-        var currentUserId = 1;
+        var currentUserId = realm.objects('AuthenticatedUser')[0].id;
         let results = hostingRequests.filtered(`host_id = ${currentUserId} and status= "accepted"`);
         
         var eventDates = this.getRequestsDate(results);
@@ -192,7 +199,7 @@ class Calendar extends React.Component {
         });
     }
 
-    onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message) {
+    onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message, profilePicture) {
         //format minutes
         var startingMin = null;
         if (startingDate.getMinutes() < 10) {
@@ -215,7 +222,8 @@ class Calendar extends React.Component {
             endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
             endingHour: endingDate.getHours() + 'h' + endingMin,
             nbGuests: nbGuests,
-            message: message
+            message: message,
+            profilePicture: profilePicture
         });
         this.refs.detailsRequest.open();
     }
@@ -230,18 +238,13 @@ class Calendar extends React.Component {
             endingDate: '',
             endingHour: '',
             nbGuests: '',
-            message: ''
+            message: '',
+            profilePicture: ''
         });
         this.refs.detailsRequest.close();
     }
 
     renderRow(rowData, sectionID, rowID) {
-        var avatar = null;
-        if (rowData['guest'].profilePicture == null) {
-            avatar = <Icon name='user' size={50} style={{marginLeft: 15, marginRight: 15}}/>
-        } else {
-            avatar = <Image source={{uri: '././resources/users.png'}}/>
-        }
         var nbGuest = null;
         if (rowData['request'].numberOfGuest == 1) {
             nbGuest = singleGuest;
@@ -260,10 +263,11 @@ class Calendar extends React.Component {
                         rowData['request'].startingDate,
                         rowData['request'].endingDate,
                         nbGuest,
-                        rowData['request'].message
+                        rowData['request'].message,
+                        rowData['guest'].profilePicture.value
                         )}>
                     <View style={styles.hostingRow}>
-                        {avatar}
+                        <Image style={styles.circle} source={{uri: rowData['guest'].profilePicture.value}}/>
                         <View>
                             <Text style={{fontWeight: 'bold'}}>{rowData['guest'].firstName} {rowData['guest'].lastName}</Text>
                             <View style={styles.inlineBlocks}>
@@ -324,21 +328,21 @@ class Calendar extends React.Component {
                     </View>
                     <View style={styles.modalInnerContainer}>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
-                            <Icon name="user" size={35} style={styles.icon}/>
+                            <Image style={styles.circle} source={{uri: this.state.profilePicture}}/> 
                             <View>
                                 <Text style={{fontSize: 18}}>{this.state.firstName} {this.state.lastName}</Text>
                                 <Text>{this.state.age} ans </Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
-                            <Icon name="calendar" size={30}  style={styles.icon}/>
+                            <Icon name="calendar" size={30}  style={[styles.icon, {marginLeft: 15}]}/>
                             <View>
                                 <Text>Arrivée : {this.state.startingDate} vers {this.state.startingHour}</Text>
                                 <Text>Départ : {this.state.endingDate} vers {this.state.endingHour}</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
-                            <Icon name="users" size={28} style={styles.icon} />
+                            <Icon name="users" size={28} style={[styles.icon, {marginLeft: 15}]} />
                             <Text>{this.state.nbGuests}</Text>
                         </View>
                         <View>
