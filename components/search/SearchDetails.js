@@ -13,7 +13,7 @@ import DateFormat from '../common/DateFormat';
 var styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 64,
+        marginTop: 50,
     },
     scrollContainer: {
         backgroundColor: '#FAFAFA',
