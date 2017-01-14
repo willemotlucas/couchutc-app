@@ -119,20 +119,25 @@ class Conversation extends React.Component {
 				messages: GiftedChat.append(previousState.messages, messages),
 			};
 	    });
-	    realm.write(() => {
+	    this.saveMessage(messages[0].text, this.state.currentUser.id, this.state.interlocutor.id);
+	    // for demo purpose
+    	this.answerDemo(messages);
+  	}
+
+  	//function to save current user and automatic demo answers
+  	saveMessage(message, user, interlocutor) {
+  		realm.write(() => {
 			realm.create('Message', {
 				id: this.state.messages.length,
 				sendAt: new Date(),
-				message: messages[0].text,
+				message: message,
 				createdAt: new Date(),
 				updatedAt: new Date(),
-				from_user_id: 1, //TODO
-				to_user_id: this.state.interlocutor.id 
+				from_user_id: user, //TODO
+				to_user_id: interlocutor
 			});
 		});
-    	this.props.refresh(true);
-	    // for demo purpose
-    	this.answerDemo(messages);
+		this.props.refresh(true);
   	}
 
   	answerDemo(messages) {
@@ -150,6 +155,7 @@ class Conversation extends React.Component {
 	      	if (this._isMounted === true) {
 		        if (messages.length > 0) {
          	 		this.onReceive(answers[counter]);
+         	 		this.saveMessage(answers[counter], this.state.interlocutor.id, this.state.currentUser.id);
          	 		counter= counter + 1;
         		}
       		}
