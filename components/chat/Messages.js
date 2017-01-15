@@ -12,6 +12,10 @@ var styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#F5FCFF",
+    },
+    navbar: {
+        paddingTop: 20,
+        backgroundColor: "#009286"
     }
 });
 
@@ -24,10 +28,12 @@ class Messages extends React.Component {
     render(){
         return (
             <View style={styles.container}>
-                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#009286" tabBarUnderlineStyle={{color: "white", borderWidth: 0}}/>}>
-                    <Chat tabLabel="Conversations" refresh={true}/>
-                    <Requests tabLabel="Demandes" />
-                </ScrollableTabView>
+                <View style={styles.navbar}>
+                    <ScrollableTabView prerenderingSiblingsNumber={1} renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#009286" tabBarUnderlineStyle={{color: "white", borderWidth: 0}}/>}>
+                        <Chat tabLabel="Conversations" refresh={true}/>
+                        <Requests tabLabel="Demandes" />
+                    </ScrollableTabView>
+                </View>
             </View>
         );
     }
