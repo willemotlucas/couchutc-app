@@ -32,7 +32,7 @@ var styles = StyleSheet.create({
         fontSize: 18
     }, 
     header: {
-        backgroundColor: '#00A799',
+        backgroundColor: '#009286',
         height: 200,
         alignItems: 'center',
     },
