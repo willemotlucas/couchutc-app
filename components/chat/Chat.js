@@ -39,6 +39,9 @@ var styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold'
+    },
+    row: {
+        padding: 10
     }
 });
 
