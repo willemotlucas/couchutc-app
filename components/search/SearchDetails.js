@@ -6,6 +6,7 @@ import Button from 'react-native-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Carousel from 'react-native-looped-carousel';
 import Modal from 'react-native-modalbox';
+import Toast from 'react-native-root-toast';
 
 import realm from '../../models/realm';
 import DateFormat from '../common/DateFormat';
@@ -92,11 +93,13 @@ class SearchDetails extends React.Component {
         super(props);
         this.state = {
             showModal: false,
-            message: ''
+            messageToast: '',
+            visible: false
         }
 
         this.onSendRequestButtonPress = this.onSendRequestButtonPress.bind(this);
         this.onSendHostingRequest = this.onSendHostingRequest.bind(this);
+        this.displayToast = this.displayToast.bind(this);
     }
 
     onSendRequestButtonPress() {
@@ -104,6 +107,7 @@ class SearchDetails extends React.Component {
     }
 
     onSendHostingRequest() {
+        const currentUser = realm.objects('AuthenticatedUser')[0];
         const hostingRequests = realm.objects('HostingRequest');
         const lastHostingRequest = hostingRequests[hostingRequests.length - 1];
 
@@ -116,7 +120,7 @@ class SearchDetails extends React.Component {
             status: 'pending',
             createdAt: new Date(),
             updatedAt: new Date(),
-            guest_id: 2,
+            guest_id: currentUser.id,
             host_id: this.props.user.id
         }
 
@@ -125,6 +129,19 @@ class SearchDetails extends React.Component {
         });
 
         this.setState({showModal: !this.state.showModal});
+        this.displayToast('La demande a bien été envoyée');
+    }
+
+    displayToast(message) {
+        setTimeout(() => this.setState({
+            visible: true,
+            messageToast: message
+        }), 1000); // show toast after 1s
+
+        setTimeout(() => this.setState({
+            visible: false,
+            messageToast: ""
+        }), 5000); // hide toast after 5s
     }
 
     render() {
@@ -187,6 +204,9 @@ class SearchDetails extends React.Component {
                         </Button>
                     </View>
                 </Modal>
+                <Toast visible={this.state.visible} position={-65} shadow={false} animation={false} hideOnPress={true}>
+                    {this.state.messageToast}
+                </Toast>
             </View>
         );
     }

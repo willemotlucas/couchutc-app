@@ -4,6 +4,7 @@ import {Actions} from "react-native-router-flux";
 import Button from "react-native-button";
 import NavigationBar from "react-native-navbar";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Toast from 'react-native-root-toast';
 
 import SearchCity from './SearchCity';
 import SearchDate from './SearchDate';
@@ -66,7 +67,9 @@ class Search extends React.Component {
             pickedEndDate: null,
             numberOfGuestString: '1 voyageur',
             numberOfGuest: 1,
-            renderResults: false
+            renderResults: false,
+            messageToast: '',
+            visible: false
         }
 
         this.setSearchCityModalVisible = this.setSearchCityModalVisible.bind(this);
@@ -77,6 +80,7 @@ class Search extends React.Component {
         this.handleNumberOfGuest = this.handleNumberOfGuest.bind(this);
         this.toggleRenderResults = this.toggleRenderResults.bind(this);
         this.onSearchButtonPress = this.onSearchButtonPress.bind(this);
+        this.displayToast = this.displayToast.bind(this);
     }
 
     setSearchCityModalVisible(visible) {
@@ -134,6 +138,8 @@ class Search extends React.Component {
     onSearchButtonPress() {
         if(this.state.searchCity != 'Chercher une ville' && this.state.pickedStartDate != null && this.state.pickedEndDate != null){
             this.toggleRenderResults();
+        } else {
+            this.displayToast('Veuillez compléter tous les critères de recherche');
         }
     }
 
@@ -141,6 +147,18 @@ class Search extends React.Component {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
         // if renderResults == true, that means we want to close search container and render search results
         this.setState({renderResults: !this.state.renderResults});
+    }
+
+    displayToast(message) {
+        setTimeout(() => this.setState({
+            visible: true,
+            messageToast: message
+        }), 300); // show toast after 1s
+
+        setTimeout(() => this.setState({
+            visible: false,
+            messageToast: ""
+        }), 4000); // hide toast after 5s
     }
 
     renderSearchView() {
@@ -209,6 +227,10 @@ class Search extends React.Component {
                 {this.renderResults()}
                 {this.renderBlankContainer()}
                 {this.renderSearchButton()}
+
+                <Toast visible={this.state.visible} position={-105} shadow={false} animation={true} hideOnPress={true}>
+                    {this.state.messageToast}
+                </Toast>
             </View>
         );
     }
