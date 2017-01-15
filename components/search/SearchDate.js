@@ -124,10 +124,10 @@ class SearchDate extends React.Component {
         var startDate = this.state.startDate;
         var endDate = this.state.endDate;
 
-        // if(startDate instanceof Date && !isNaN(startDate.valueOf()) && endDate instanceof Date && !isNaN(endDate.valueOf())){
+        if(startDate instanceof Date && !isNaN(startDate.valueOf()) && endDate instanceof Date && !isNaN(endDate.valueOf())){
             this.props.onPickDate(startDate, endDate);
             this.props.closeModal(false);
-        // }
+        }
     }
 
     render() {

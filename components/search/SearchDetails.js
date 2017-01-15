@@ -136,12 +136,12 @@ class SearchDetails extends React.Component {
         setTimeout(() => this.setState({
             visible: true,
             messageToast: message
-        }), 1000); // show toast after 1s
+        }), 300); // show toast after 1s
 
         setTimeout(() => this.setState({
             visible: false,
             messageToast: ""
-        }), 5000); // hide toast after 5s
+        }), 4000); // hide toast after 5s
     }
 
     render() {
@@ -204,7 +204,7 @@ class SearchDetails extends React.Component {
                         </Button>
                     </View>
                 </Modal>
-                <Toast visible={this.state.visible} position={-65} shadow={false} animation={false} hideOnPress={true}>
+                <Toast visible={this.state.visible} position={-65} shadow={false} animation={true} hideOnPress={true}>
                     {this.state.messageToast}
                 </Toast>
             </View>
