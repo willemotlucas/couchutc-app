@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TouchableHighlight} from "react-native";
+import {View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TouchableHighlight, ActionSheetIOS} from "react-native";
 import {Actions} from "react-native-router-flux";
 import Button from "apsl-react-native-button";
 import ImagePicker from 'react-native-image-crop-picker';
@@ -80,19 +80,8 @@ class User extends React.Component {
             profilePicture: user.profilePicture.value
         }
 
-        this.openEditProfilePicture = this.openEditProfilePicture.bind(this);
         this.saveProfilePicture = this.saveProfilePicture.bind(this);
         this.refreshProfilePicture = this.refreshProfilePicture.bind(this);
-    }
-
-    openEditProfilePicture() {
-        if (this.state.user.id == realm.objects('AuthenticatedUser')[0].id) {
-            this.refs.choosePictureFrom.open();
-        }
-    }
-
-    closeEditProfilePicture() {
-        this.refs.choosePictureFrom.close();
     }
 
     getPictureFromCamera() {
@@ -105,7 +94,6 @@ class User extends React.Component {
         }).then(image => {
             this.saveProfilePicture(image.data);
         });
-        this.refs.choosePictureFrom.close();
     }
 
     getPictureFromGallery() {
@@ -118,7 +106,6 @@ class User extends React.Component {
         }).then(image => {
             this.saveProfilePicture(image.data);
         });
-        this.refs.choosePictureFrom.close();
     }
 
     saveProfilePicture(picture) {
@@ -147,6 +134,21 @@ class User extends React.Component {
         Actions.login({type: 'reset'});
     }
 
+    showActionSheet = () => {
+        ActionSheetIOS.showActionSheetWithOptions({
+          options: ["Choisir une photo depuis la galerie", "Prendre une photo", "Cancel"],
+          cancelButtonIndex: 2
+        },
+        (buttonIndex) => {
+            switch(buttonIndex){
+                case 0: this.getPictureFromGallery();
+                break;
+                case 1: this.getPictureFromCamera();
+                break;
+            }
+        });
+    };
+
     render() {
         var profilePicture = null;
         if (this.state.user.profilePicture == null) {
@@ -162,7 +164,7 @@ class User extends React.Component {
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.header}>
-                        <TouchableOpacity onPress={() => this.openEditProfilePicture()}>
+                        <TouchableOpacity onPress={() => this.showActionSheet()}>
                             <Image style={styles.circle} source={{uri: this.state.user.profilePicture.value}}/>                            
                         </TouchableOpacity>
                         <Text style={styles.title}>{this.state.user.firstName} {this.state.user.lastName}</Text>
