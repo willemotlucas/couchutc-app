@@ -32,8 +32,7 @@ var styles = StyleSheet.create({
     hostingRow: {
         flexDirection: 'row', 
         alignItems: 'center', 
-        paddingTop: 5, 
-        paddingBottom: 5
+        padding: 10, 
     },
     inlineBlocks: {
         flexDirection: 'row',
@@ -44,7 +43,7 @@ var styles = StyleSheet.create({
     },
     chevronRight: {
         position: 'relative', 
-        left: 180
+        left: 210
     },
     modal: {
         flexDirection: 'row',
@@ -295,7 +294,7 @@ class Calendar extends React.Component {
                             </View>
                         </View>
                         <View>
-                        <Icon name='angle-right'size={45} style={styles.chevronRight}/>
+                            <Icon name='angle-right'size={45} style={styles.chevronRight}/>
                         </View>
                     </View>
                   </TouchableHighlight>
@@ -350,8 +349,8 @@ class Calendar extends React.Component {
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="calendar" size={30}  style={styles.icon}/>
                             <View>
-                                <Text>Arrivée : {this.state.startingDate} vers {this.state.startingHour}</Text>
-                                <Text>Départ : {this.state.endingDate} vers {this.state.endingHour}</Text>
+                                <Text>Arrivée : {this.state.startingDate}</Text>
+                                <Text>Départ : {this.state.endingDate}</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
