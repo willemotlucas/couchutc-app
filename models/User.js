@@ -8,6 +8,7 @@ export default class User extends Realm.Object {
 
 User.schema = {
   name: 'User',
+  primaryKey: 'id',
   properties: {
     id: 'int',
     firstName: 'string',

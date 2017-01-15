@@ -76,14 +76,19 @@ class User extends React.Component {
 
         this.state = {
             user: user,
-            home: home
+            home: home,
+            profilePicture: user.profilePicture.value
         }
 
         this.openEditProfilePicture = this.openEditProfilePicture.bind(this);
+        this.saveProfilePicture = this.saveProfilePicture.bind(this);
+        this.refreshProfilePicture = this.refreshProfilePicture.bind(this);
     }
 
     openEditProfilePicture() {
-        this.refs.choosePictureFrom.open();
+        if (this.state.user.id == realm.objects('AuthenticatedUser')[0].id) {
+            this.refs.choosePictureFrom.open();
+        }
     }
 
     closeEditProfilePicture() {
@@ -94,9 +99,11 @@ class User extends React.Component {
         ImagePicker.openCamera({
           width: 300,
           height: 400,
-          cropping: true
+          cropping: true,
+          cropperCircleOverlay: true,
+          includeBase64: true
         }).then(image => {
-          console.log(image);
+            this.saveProfilePicture(image.data);
         });
         this.refs.choosePictureFrom.close();
     }
@@ -105,11 +112,31 @@ class User extends React.Component {
         ImagePicker.openPicker({
           width: 300,
           height: 400,
-          cropping: true
+          cropping: true,
+          cropperCircleOverlay: true,
+          includeBase64: true
         }).then(image => {
-          console.log(image);
+            this.saveProfilePicture(image.data);
         });
         this.refs.choosePictureFrom.close();
+    }
+
+    saveProfilePicture(picture) {
+        if (this.state.user.id == realm.objects('AuthenticatedUser')[0].id) {
+            realm.write(() => {
+                realm.create('User', {
+                    id: this.state.user.id,
+                    profilePicture: {value: "data:image/jpeg;base64," + picture}
+                }, true);
+            });
+            this.refreshProfilePicture(picture);
+        }
+    }
+
+    refreshProfilePicture(picture) {
+        this.setState({
+            profilePicture: picture
+        });
     }
 
     logout() {
@@ -126,6 +153,10 @@ class User extends React.Component {
             profilePicture = <Image style={{width: 70, height: 70}} source={require('../../resources/user.png')}/>;
         } else {
             profilePicture = <Image style={{width: 70, height: 70}} source={this.state.user.profilePicture.value}/>;
+        }
+        var logOutButton = null;
+        if (this.state.user.id == realm.objects('AuthenticatedUser')[0].id) {
+            var logOutButton = <Button style={{backgroundColor: '#F94351', borderColor: 'transparent'}} onPress={() => this.logout()}><Text style={{color: 'white', fontSize: 20}}>Déconnexion</Text></Button>
         }
         return (
             <View style={styles.container}>
@@ -161,7 +192,7 @@ class User extends React.Component {
                             <Text style={styles.label}>Pays visités</Text>
                             <Text style={styles.text}>{this.state.user.visitedCountries}</Text>
                         </View>
-                        <Button style={{backgroundColor: '#F94351', borderColor: 'transparent'}} onPress={() => this.logout()}><Text style={{color: 'white', fontSize: 20}}>Déconnexion</Text></Button>
+                        {logOutButton}
                     </View>
                 </ScrollView>
                 <Modal style={styles.modal} position={"center"} ref={"choosePictureFrom"}>
