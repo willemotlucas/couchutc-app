@@ -94,7 +94,8 @@ class SearchDetails extends React.Component {
         this.state = {
             showModal: false,
             messageToast: '',
-            visible: false
+            visible: false,
+            message: ''
         }
 
         this.onSendRequestButtonPress = this.onSendRequestButtonPress.bind(this);

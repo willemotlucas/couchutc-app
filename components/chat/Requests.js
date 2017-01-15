@@ -77,7 +77,7 @@ var styles = StyleSheet.create({
     },
     row : {
         padding: 10
-    }
+    },
     circle: {
         width: 60,
         height: 60,
