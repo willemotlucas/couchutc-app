@@ -76,32 +76,49 @@ var styles = StyleSheet.create({
 
 var calendarStyles = StyleSheet.create({
     calendarContainer: {
-        backgroundColor: '#EEE',
+        backgroundColor: '#009286',
+        paddingTop: 10
     },
     calendarControls: {
-      backgroundColor: '#EEE',
+      backgroundColor: '#009286',
     },
     calendarHeading: {
       borderTopWidth: 0,
-      borderBottomColor: '#CCC',
+      borderBottomColor: '#009286',
       borderBottomWidth: 0.5
     },
     hasEventDaySelectedCircle: {
-      backgroundColor: '#00A799',
+      backgroundColor: 'white',
     },
     selectedDayCircle: {
-      backgroundColor: '#00A799',
+      backgroundColor: 'white',
     },
     title: {
-      color: '#00A799',
+      color: 'white',
       fontSize: 20
     },
     weekRow: {
-      borderTopWidth: 0.5,
-      borderTopColor: '#CCC',
+      borderTopWidth: 0,
+      borderTopColor: 'transparent',
     },
     eventIndicator: {
-        backgroundColor: '#999'
+        backgroundColor: 'white'
+    },
+    day: {
+        color: 'white'
+    },
+    dayHeading: {
+        color: 'white'
+    },
+    selectedDayText: {
+        color: '#009286'
+    },
+    currentDayText: {
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    currentDayCircle: {
+        backgroundColor: 'white',
     },
 });
 
@@ -293,24 +310,24 @@ class Calendar extends React.Component {
             <View style={styles.container}>
                 <CalendarComponent
                 customStyle={calendarStyles} // Customize any pre-defined styles
-                dayHeadings={['S', 'M', 'T', 'W', 'T', 'F', 'S']}               // Default: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+                dayHeadings={['D', 'L', 'M', 'M', 'J', 'V', 'S']}               // Default: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
                 eventDates={this.state.eventDates}       // Optional array of moment() parseable dates that will show an event indicator
-                events={this.state.eventDates}// Optional array of event objects with a date property and custom styles for the event indicator
+                events={this.state.eventDates} // Optional array of event objects with a date property and custom styles for the event indicator
                 monthNames={['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']}// Defaults to english names of months
-                nextButtonText={<Icon name='chevron-right' size={20}/>}           // Text for next button. Default: 'Next'
+                nextButtonText={<Icon name='chevron-right' color="#fff" size={20}/>}           // Text for next button. Default: 'Next'
                 onDateSelect={(date) => this.onDateSelected(date)} // Callback after date selection
                 onSwipeNext={this.onSwipeNext}    // Callback for forward swipe event
                 onSwipePrev={this.onSwipePrev}    // Callback for back swipe event
                 onTouchNext={this.onTouchNext}    // Callback for next touch event
                 onTouchPrev={this.onTouchPrev}    // Callback for prev touch event
-                prevButtonText={<Icon name='chevron-left' size={20}/>}           // Text for previous button. Default: 'Prev'
+                prevButtonText={<Icon name='chevron-left' color="#fff" size={20}/>}           // Text for previous button. Default: 'Prev'
                 scrollEnabled={true}              // False disables swiping. Default: False
                 showControls={true}               // False hides prev/next buttons. Default: False
                 showEventIndicators={true}        // False hides event indicators. Default:False
                 startDate={this.state.currentDate}          // The first month that will display. Default: current month
                 titleFormat={'MMMM YYYY'}         // Format for displaying current month. Default: 'MMMM YYYY'
                 today={this.state.currentDate}              // Defaults to today
-                weekStart={0} // Day on which week starts 0 - Sunday, 1 - Monday, 2 - Tuesday, etc, Default: 1
+                weekStart={1} // Day on which week starts 0 - Sunday, 1 - Monday, 2 - Tuesday, etc, Default: 1
                 />
                 <View style={styles.separator}/>
                 <ListView
