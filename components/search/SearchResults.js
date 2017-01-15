@@ -49,7 +49,8 @@ class SearchResults extends React.Component {
     constructor(props) {
         super(props);
 
-        let results = realm.objects('User').filtered(`hosting = true AND home.city = "${props.city}" AND home.maxGuestNumber >= ${props.nbGuest}`);
+        const currentUser = realm.objects('AuthenticatedUser')[0];
+        let results = realm.objects('User').filtered(`id != ${currentUser.id} AND hosting = true AND home.city = "${props.city}" AND home.maxGuestNumber >= ${props.nbGuest}`);
         
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
