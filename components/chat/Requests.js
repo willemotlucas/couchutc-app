@@ -4,7 +4,8 @@ import {
     Text, 
     StyleSheet,
     ListView,
-    TouchableHighlight
+    TouchableHighlight,
+    Image
 } from "react-native";
 import {Actions} from "react-native-router-flux";
 import Modal from 'react-native-modalbox';
@@ -77,6 +78,13 @@ var styles = StyleSheet.create({
     row : {
         padding: 10
     }
+    circle: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
 
 var monthNames = [
@@ -95,7 +103,7 @@ class Requests extends React.Component {
         super(props);
 
         var dataForList = this.getDataForList();
-        var currentUser = 1;
+        var currentUser = realm.objects('AuthenticatedUser')[0].id;
         var dataSource = new ListView.DataSource(
           {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
         this.state = {
@@ -118,7 +126,8 @@ class Requests extends React.Component {
             sliderValue: 0.3,
             currentUserId: currentUser,
             visible: false,
-            messageToast: ""
+            messageToast: '',
+            profilePicture: ''
         };
     }
 
@@ -149,7 +158,7 @@ class Requests extends React.Component {
         return dataForList;
     }
 
-    onHostingRequestPressed(id, firstName, lastName, age, requestId, startingDate, endingDate, nbGuests, message) {
+    onHostingRequestPressed(id, firstName, lastName, age, requestId, startingDate, endingDate, nbGuests, message, profilePicture) {
         //format minutes
         var startingMin = null;
         if (startingDate.getMinutes() < 10) {
@@ -174,7 +183,8 @@ class Requests extends React.Component {
             endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
             endingHour: endingDate.getHours() + 'h' + endingMin,
             nbGuests: nbGuests,
-            message: message
+            message: message,
+            profilePicture: profilePicture
         });
 
         this.refs.detailsRequest.open();
@@ -227,12 +237,6 @@ class Requests extends React.Component {
     }
 
     renderRow(rowData, sectionID, rowID) {
-        var avatar = null;
-        if (rowData['user'].profilePicture == null) {
-            avatar = <Icon name="user" size={50} style={{marginLeft: 15, marginRight: 15}}/>
-        } else {
-            //Add picture
-        }
         var receivedPicture = null;
         if (rowData['request'].guest_id === this.state.currentUserId) {
             receivedPicture = <MaterialIcons name='call-made' size={40} style={{color: '#00A799', position: 'absolute', right: 10, top: 15}}/>
@@ -252,11 +256,12 @@ class Requests extends React.Component {
                     rowData['request'].startingDate,
                     rowData['request'].endingDate,
                     rowData['request'].numberOfGuest,
-                    rowData['request'].message
+                    rowData['request'].message,
+                    rowData['user'].profilePicture.value
                     )}
                     underlayColor='#dddddd'>
                         <View style={styles.requestRow}>
-                            {avatar}
+                            <Image style={[styles.circle, {marginRight: 15, marginLeft: 10}]} source={{uri: rowData['user'].profilePicture.value}}/> 
                             <View>
                                 <Text>{rowData['user'].firstName} {rowData['user'].lastName}</Text>
                                 <View style={styles.inlineBlocks}>
@@ -290,21 +295,21 @@ class Requests extends React.Component {
                     </View>
                     <View style={styles.modalInnerContainer}>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
-                            <Icon name="user" size={35} style={styles.icon}/>
+                            <Image style={styles.circle} source={{uri: this.state.profilePicture}}/> 
                             <View>
                                 <Text style={{fontSize: 18}}>{this.state.firstName} {this.state.lastName}</Text>
                                 <Text>{this.state.age} ans </Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
-                            <Icon name="calendar" size={30}  style={styles.icon}/>
+                            <Icon name="calendar" size={30}  style={[styles.icon, {marginLeft: 15, marginRight: 15}]}/>
                             <View>
                                 <Text>Arrivée : {this.state.startingDate}</Text>
                                 <Text>Départ : {this.state.endingDate}</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
-                            <Icon name="users" size={28} style={styles.icon} />
+                            <Icon name="users" size={28} style={[styles.icon, {marginLeft: 15, marginRight: 15}]} />
                             <Text>{this.state.nbGuests} voyageurs</Text>
                         </View>
                         <View>
