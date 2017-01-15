@@ -82,7 +82,7 @@ export default class extends React.Component {
         return (
             <View style={[styles.container, this.props.style]}>
                 <FontAwesomeIcon name="home" size={200} style={{alignSelf: 'center', marginBottom: 20}}/>
-                <Sae label={'Email'} ref="email" style={styles.textInput} labelStyle={styles.textInputLabel} inputStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'grey'} iconName={'user'}/>
+                <Sae label={'Email'} ref="email" style={styles.textInput} labelStyle={styles.textInputLabel} inputStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} iconColor={'grey'} iconName={'user'} autoCapitalize="none" autoCorrection={false}/>
                 <Sae label={'Mot de passe'} secureTextEntry={true} ref="password" style={styles.textInput} labelStyle={styles.textInputLabel} iconClass={FontAwesomeIcon} inputStyle={styles.textInputLabel} iconColor={'grey'} iconName={'unlock'}/>
                 <Text style={styles.warning}>{this.state.message}</Text>
                 <Button style={[styles.button, {marginTop: 20}]} onPress={() => this.authenticate()}><Text style={styles.labelButton}>Se connecter</Text></Button>
