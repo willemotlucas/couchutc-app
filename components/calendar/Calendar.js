@@ -137,7 +137,7 @@ class Calendar extends React.Component {
         var currentDate = new Date().toJSON().slice(0,10);
         let hostingRequests = realm.objects('HostingRequest');
         var currentUserId = 1;
-        let results = hostingRequests.filtered(`host_id = ${currentUserId} and status= "accepted"`);
+        let results = hostingRequests.filtered(`host_id = ${currentUserId} and status = "accepted"`);
         
         var eventDates = this.getRequestsDate(results);
         var dataSource = new ListView.DataSource(
@@ -182,14 +182,21 @@ class Calendar extends React.Component {
     }
 
     onDateSelected(date) {
+        // Retrieve all requests
         var requests = this.state.hostingRequests;
         var requestsForSelectedDate = [];
+        // Retrieve selected date
         var selectedDate = new Date(date).toJSON().slice(0,10);
 
-        //get all hosting requests for selected date
+        // Get all hosting requests for selected date
+        // Iterate over all request
         Object.keys(requests).forEach(function(key) {
-            if (requests[key].startingDate.toJSON().slice(0,10) <= selectedDate && 
-            requests[key].endingDate.toJSON().slice(0,10) >= selectedDate) {
+            // Fix décalage d'un jour
+            var startingDate = new Date(requests[key].startingDate - 1).toJSON().slice(0,10);
+            var endingDate = new Date(requests[key].endingDate - 1).toJSON().slice(0,10);
+
+            // If selected date is between starting date and ending date
+            if (startingDate <= selectedDate && endingDate >= selectedDate) {
                 let users = realm.objects('User');
                 let guest = users.filtered(`id = ${requests[key].guest_id}`);
                 //build array to display list
