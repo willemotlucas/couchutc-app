@@ -80,10 +80,10 @@ var styles = StyleSheet.create({
 });
 
 var monthNames = [
-    "Jan", "Fev", "Mar",
-    "Avr", "Mai", "Juin", "Juil",
-    "Au", "Sept", "Oct",
-    "Nov", "Dec"
+    "Janvier", "Février", "Mars",
+    "Avril", "Mai", "Juin", "Juillet",
+    "Août", "Septembre", "Octobre",
+    "Novembre", "Décembre"
 ];
 
 const onButtonPress = () => {
@@ -299,8 +299,8 @@ class Requests extends React.Component {
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="calendar" size={30}  style={styles.icon}/>
                             <View>
-                                <Text>Arrivée : {this.state.startingDate} vers {this.state.startingHour}</Text>
-                                <Text>Départ : {this.state.endingDate} vers {this.state.endingHour}</Text>
+                                <Text>Arrivée : {this.state.startingDate}</Text>
+                                <Text>Départ : {this.state.endingDate}</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
@@ -320,7 +320,7 @@ class Requests extends React.Component {
                             <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}} onPress={() => Actions.message_details({interlocutor: this.state.interlocutorId, refresh: this.refresh})}>
                                 Demander plus d'informations
                             </Button>
-                            <Button style={{backgroundColor: '#F94351', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}}>
+                            <Button style={{backgroundColor: '#F94351', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}} onPress={() => this.refuseHostingRequest(this.state.requestId)}>
                                 Refuser la demande
                             </Button>
                         </View>
