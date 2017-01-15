@@ -193,7 +193,7 @@ class SearchDetails extends React.Component {
                     </View>
                 </ScrollView>
                 <Button style={styles.end} onPress={this.onSendRequestButtonPress}>Envoyer une demande</Button>
-                <Modal style={styles.modal} position={"top"} isOpen={this.state.showModal}>
+                <Modal style={styles.modal} position={"center"} isOpen={this.state.showModal}>
                     <View style={[styles.inlineBlocks, {position: 'absolute', top: 0}]}>
                      <Icon name="close" size={30} style={[styles.icon, {marginLeft: 10, marginRight: 40}]} onPress={() => this.setState({showModal: !this.state.showModal})}/>
                         <Text style={{fontSize: 20}}>Résumé de la demande</Text>

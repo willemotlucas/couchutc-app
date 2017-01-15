@@ -127,7 +127,8 @@ class Requests extends React.Component {
             currentUserId: currentUser,
             visible: false,
             messageToast: '',
-            profilePicture: ''
+            profilePicture: '',
+            displayModalButtons: true
         };
     }
 
@@ -159,19 +160,13 @@ class Requests extends React.Component {
     }
 
     onHostingRequestPressed(id, firstName, lastName, age, requestId, startingDate, endingDate, nbGuests, message, profilePicture) {
-        //format minutes
-        var startingMin = null;
-        if (startingDate.getMinutes() < 10) {
-            startingMin = "0" + startingDate.getMinutes();
+        var host_id = realm.objects('HostingRequest').filtered(`id = ${requestId}`)[0].host_id;
+        if(host_id === this.state.currentUserId){
+            this.setState({displayModalButtons: true});
         } else {
-            startingMin = startingDate.getMinutes();
+            this.setState({displayModalButtons: false});
         }
-        var endingMin = null;
-        if (endingDate.getMinutes() < 10) {
-            endingMin = "0" + endingDate.getMinutes();
-        } else {
-            endingMin = endingDate.getMinutes();
-        }
+
         this.setState({
             interlocutorId: id,
             firstName: firstName,
@@ -179,16 +174,13 @@ class Requests extends React.Component {
             age: age,
             requestId: requestId,
             startingDate: startingDate.getDate() + ' ' + monthNames[startingDate.getMonth()],
-            startingHour: startingDate.getHours() + 'h' + startingMin,
             endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
-            endingHour: endingDate.getHours() + 'h' + endingMin,
             nbGuests: nbGuests,
             message: message,
             profilePicture: profilePicture
         });
 
         this.refs.detailsRequest.open();
-
     }
 
     closeRequestDetails() {
@@ -282,6 +274,24 @@ class Requests extends React.Component {
         );
     }
 
+    renderModalButtons() {
+        if(this.state.displayModalButtons){
+            return (
+                <View style={styles.buttons}>
+                    <Button style={{backgroundColor: '#00A799', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}} onPress={() => this.acceptHostingRequest(this.state.requestId)}>
+                        Accepter la demande
+                    </Button>
+                    <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}} onPress={() => Actions.message_details({interlocutor: this.state.interlocutorId, refresh: this.refresh})}>
+                        Demander plus dinformations
+                    </Button>
+                    <Button style={{backgroundColor: '#F94351', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}} onPress={() => this.refuseHostingRequest(this.state.requestId)}>
+                        Refuser la demande
+                    </Button>
+                </View>
+            );
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -318,17 +328,7 @@ class Requests extends React.Component {
                             {this.state.message}</Text>
                         </View>
                     </View>
-                    <View style={styles.buttons}>
-                            <Button style={{backgroundColor: '#00A799', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}} onPress={() => this.acceptHostingRequest(this.state.requestId)}>
-                                Accepter la demande
-                            </Button>
-                            <Button style={{borderColor: '#00A799', height: 35}} textStyle={{fontSize: 15, color: '#00A799'}} onPress={() => Actions.message_details({interlocutor: this.state.interlocutorId, refresh: this.refresh})}>
-                                Demander plus d'informations
-                            </Button>
-                            <Button style={{backgroundColor: '#F94351', borderColor: 'transparent', height: 35}} textStyle={{fontSize: 15, color: 'white'}} onPress={() => this.refuseHostingRequest(this.state.requestId)}>
-                                Refuser la demande
-                            </Button>
-                        </View>
+                    {this.renderModalButtons()}
                 </Modal>
                 <Toast
                 visible={this.state.visible}

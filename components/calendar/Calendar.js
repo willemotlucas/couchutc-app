@@ -240,6 +240,7 @@ class Calendar extends React.Component {
             endingDate: rowData['request'].endingDate.getDate() + ' ' + monthNames[rowData['request'].endingDate.getMonth()],
             nbGuests: rowData['request'].numberOfGuest,
             message: rowData['request'].message,
+            messageLabel: row.messageLabel,
             profilePicture: row.profilePicture.value,
         });
 
@@ -257,7 +258,8 @@ class Calendar extends React.Component {
             endingHour: '',
             nbGuests: '',
             message: '',
-            profilePicture: ''
+            profilePicture: '',
+            messageLabel: ''
         });
         this.refs.detailsRequest.close();
     }
@@ -272,6 +274,7 @@ class Calendar extends React.Component {
             row.age = rowData['host'].age();
             row.profilePicture = rowData['host'].profilePicture;
             row.rightIcon = <MaterialIcons name='call-made' size={30} style={{color: '#00A799', position: 'relative', left: 30}}/>
+            row.messageLabel = `Votre message`;
         } else {
             // sinon on affiche le nom/prénom et la photo de profil du current user
             row.firstName = rowData['guest'].firstName;
@@ -279,6 +282,7 @@ class Calendar extends React.Component {
             row.age = rowData['guest'].age();
             row.profilePicture = rowData['guest'].profilePicture;  
             row.rightIcon = <MaterialIcons name='call-received' size={30} style={{color: '#F94351', position: 'relative', left: 30}}/>;
+            row.messageLabel = `Message de ${row.firstName}`;
         }
 
         return row;
@@ -378,7 +382,7 @@ class Calendar extends React.Component {
                             <Text>{this.state.nbGuests} voyageur(s)</Text>
                         </View>
                         <View>
-                            <Text>Message de {this.state.firstName}</Text>
+                            <Text>{this.state.messageLabel}</Text>
                             <Text style={styles.borderedText} numberOfLines={6}>
                             {this.state.message}</Text>
                         </View>
