@@ -64,6 +64,10 @@ var styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10
     },
+    inline: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     lineDetails: {
         marginBottom: 8
     },
@@ -82,6 +86,13 @@ var styles = StyleSheet.create({
         color: 'white',
         height: 40,
         paddingTop: 7
+    },
+    circle: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginRight: 5,
+        marginBottom: 10
     }
 });
 
@@ -155,7 +166,10 @@ class SearchDetails extends React.Component {
                         {user.home.photos.map((photo) => <Image style={{width: width, height: 200}} source={{uri: photo.value}}/>)}
                     </Carousel>
                     <View style={styles.content}>
-                        <Text style={styles.title}>{user.firstName} {user.lastName}, {user.age()} ans</Text>
+                        <View style={styles.inline}>
+                            <Image style={styles.circle} source={{uri: user.profilePicture.value}}/> 
+                            <Text style={styles.title}>{user.firstName} {user.lastName}, {user.age()} ans</Text>
+                        </View>
                         <View style={styles.section}>
                             <Text style={styles.label}>Localisation</Text>
                             <Text style={styles.text}>{user.home.city}, {user.home.country}</Text>
@@ -165,7 +179,7 @@ class SearchDetails extends React.Component {
                             <Text style={styles.text}>{user.home.sleepingAccomodation} en {user.home.propertyType.toLowerCase()}</Text>
                         </View>
                         <View style={styles.section}>
-                            <Text style={styles.label}>Informations sur lhôte</Text>
+                            <Text style={styles.label}>Informations sur l'hôte</Text>
                             <Text style={styles.text}>{user.biography}</Text>
                         </View>
                         <View style={styles.section}>
