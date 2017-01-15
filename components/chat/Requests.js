@@ -133,14 +133,14 @@ class Requests extends React.Component {
     }
 
     getDataForList() {
-        var currentUser = 1;
+        var currentUser = realm.objects('AuthenticatedUser')[0].id;
         let requests = realm.objects('HostingRequest').filtered(`(guest_id = ${currentUser} or host_id = ${currentUser}) and status = "pending"`);
 
         return this.formatDataForList(requests);
     }
 
     formatDataForList(requests) {
-        var currentUser = 1;
+        var currentUser = realm.objects('AuthenticatedUser')[0].id;
         var dataForList = [];
         Object.keys(requests).forEach(function(key) {
             if (requests[key].guest_id == currentUser) {

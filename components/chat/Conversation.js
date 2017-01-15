@@ -60,6 +60,7 @@ class Conversation extends React.Component {
 		this._isMounted = true;
 		let messages = realm.objects('Message').sorted('sendAt', 'asc');
 		var conversation = this.getMessagesOfConversation(messages, this.state.interlocutor.id);
+		console.log(this.state.interlocutor.id);
 		conversation = this.formatData(conversation);
 	    this.setState({
 			messages: conversation
@@ -68,7 +69,7 @@ class Conversation extends React.Component {
 
 	getMessagesOfConversation(messages, user) {
         var conversation = [];
-        var currentUserId = 1;//TODO filter on user        
+        var currentUserId = this.state.currentUser.id;//TODO filter on user        
         Object.keys(messages).forEach(function (key) {
             if ((messages[key].from_user_id === currentUserId  && messages[key].to_user_id === user) || 
             	(messages[key].from_user_id === user  && messages[key].to_user_id === currentUserId)) {
