@@ -11,9 +11,11 @@ import {
 import {Actions} from "react-native-router-flux";
 import CalendarComponent from 'react-native-calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modalbox';
 
 import realm from '../../models/realm';
+import DateFormat from '../common/DateFormat'
 
 var styles = StyleSheet.create({
     container: {
@@ -76,7 +78,8 @@ var styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginRight: 10
     },
 });
 
@@ -144,7 +147,7 @@ class Calendar extends React.Component {
         var currentDate = new Date().toJSON().slice(0,10);
         let hostingRequests = realm.objects('HostingRequest');
         var currentUserId = realm.objects('AuthenticatedUser')[0].id;
-        let results = hostingRequests.filtered(`host_id = ${currentUserId} and status = "accepted"`);
+        let results = hostingRequests.filtered(`(host_id = ${currentUserId} or guest_id = ${currentUserId}) and status = "accepted"`);
         
         var eventDates = this.getRequestsDate(results);
         var dataSource = new ListView.DataSource(
@@ -169,7 +172,9 @@ class Calendar extends React.Component {
             endingDate: '',
             endingHour: '',
             nbGuests: '',
-            message: ''
+            message: '',
+            status: '',
+            currentUserId: currentUserId
         }
     }
 
@@ -205,11 +210,13 @@ class Calendar extends React.Component {
             // If selected date is between starting date and ending date
             if (startingDate <= selectedDate && endingDate >= selectedDate) {
                 let users = realm.objects('User');
-                let guest = users.filtered(`id = ${requests[key].guest_id}`);
+                let guest = users.filtered(`id = ${requests[key].guest_id}`)[0];
+                let host = users.filtered(`id = ${requests[key].host_id}`)[0];
                 //build array to display list
                 requestsForSelectedDate.push({
                     request: requests[key],
-                    guest: guest[0]
+                    guest: guest,
+                    host: host
                 });     
             }
         });
@@ -222,32 +229,20 @@ class Calendar extends React.Component {
         });
     }
 
-    onHostingRequestPressed(firstName, lastName, age, startingDate, endingDate, nbGuests, message, profilePicture) {
-        //format minutes
-        var startingMin = null;
-        if (startingDate.getMinutes() < 10) {
-            startingMin = "0" + startingDate.getMinutes();
-        } else {
-            startingMin = startingDate.getMinutes();
-        }
-        var endingMin = null;
-        if (endingDate.getMinutes() < 10) {
-            endingMin = "0" + endingDate.getMinutes();
-        } else {
-            endingMin = endingDate.getMinutes();
-        }
+    onHostingRequestPressed(rowData){
+        var row = this.getRowInformation(rowData);
+
         this.setState({
-            firstName: firstName,
-            lastName: lastName,
-            age: age,
-            startingDate: startingDate.getDate() + ' ' + monthNames[startingDate.getMonth()],
-            startingHour: startingDate.getHours() + 'h' + startingMin,
-            endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
-            endingHour: endingDate.getHours() + 'h' + endingMin,
-            nbGuests: nbGuests,
-            message: message,
-            profilePicture: profilePicture
+            firstName: row.firstName,
+            lastName: row.lastName,
+            age: row.age,
+            startingDate: rowData['request'].startingDate.getDate() + ' ' + monthNames[rowData['request'].startingDate.getMonth()],
+            endingDate: rowData['request'].endingDate.getDate() + ' ' + monthNames[rowData['request'].endingDate.getMonth()],
+            nbGuests: rowData['request'].numberOfGuest,
+            message: rowData['request'].message,
+            profilePicture: row.profilePicture.value,
         });
+
         this.refs.detailsRequest.open();
     }
 
@@ -267,47 +262,61 @@ class Calendar extends React.Component {
         this.refs.detailsRequest.close();
     }
 
-    renderRow(rowData, sectionID, rowID) {
-        var nbGuest = null;
-        if (rowData['request'].numberOfGuest == 1) {
-            nbGuest = singleGuest;
+    getRowInformation(rowData){
+        var row = {};
+
+        if(rowData['request'].guest_id === this.state.currentUserId){
+            // si l'invité est l'utilisateur courant, on affiche le nom/prénom de l'hote et sa photo de profil
+            row.firstName = rowData['host'].firstName;
+            row.lastName = rowData['host'].lastName;
+            row.age = rowData['host'].age();
+            row.profilePicture = rowData['host'].profilePicture;
+            row.rightIcon = <MaterialIcons name='call-made' size={30} style={{color: '#00A799', position: 'relative', left: 30}}/>
         } else {
-            nbGuest = rowData['request'].numberOfGuest + " voyageurs";
+            // sinon on affiche le nom/prénom et la photo de profil du current user
+            row.firstName = rowData['guest'].firstName;
+            row.lastName = rowData['guest'].lastName;
+            row.age = rowData['guest'].age();
+            row.profilePicture = rowData['guest'].profilePicture;  
+            row.rightIcon = <MaterialIcons name='call-received' size={30} style={{color: '#F94351', position: 'relative', left: 30}}/>;
         }
+
+        return row;
+    }
+
+    renderHostingRow(rowData){
+        var row = this.getRowInformation(rowData);
+
+        return (
+            <View style={styles.hostingRow}>
+                <Image style={[styles.circle, {marginRight: 15, marginLeft: 10}]} source={{uri: row.profilePicture.value}}/>
+                <View>
+                    <Text style={{fontWeight: 'bold'}}>{row.firstName} {row.lastName}</Text>
+                    <View style={styles.inlineBlocks}>
+                        <Icon name='calendar' size={15} style={styles.icon}/>
+                        <Text
+                        numberOfLines={1}>{rowData['request'].startingDate.getDate() + ' ' + monthNames[rowData['request'].startingDate.getMonth()]} au {rowData['request'].endingDate.getDate() + ' ' + monthNames[rowData['request'].endingDate.getMonth()]}</Text>
+                    </View>
+                    <View style={styles.inlineBlocks}>
+                        <Icon name='users' size={15} style={styles.icon}/>
+                        <Text
+                        numberOfLines={1}>{rowData['request'].numberOfGuest} voyageur(s)</Text>
+                    </View>
+                </View>
+                <View>
+                    {row.rightIcon}
+                </View>
+            </View>
+        );
+    }
+
+    renderRow(rowData, sectionID, rowID) {
         return (
             <View>
                 <View>
-                  <TouchableHighlight
-                  underlayColor='#dddddd'
-                    onPress={() => this.onHostingRequestPressed(
-                        rowData['guest'].firstName,
-                        rowData['guest'].lastName,
-                        rowData['guest'].age(),
-                        rowData['request'].startingDate,
-                        rowData['request'].endingDate,
-                        nbGuest,
-                        rowData['request'].message,
-                        rowData['guest'].profilePicture.value
-                        )}>
-                    <View style={styles.hostingRow}>
-                        <Image style={[styles.circle, {marginRight: 15, marginLeft: 10}]} source={{uri: rowData['guest'].profilePicture.value}}/>
-                        <View>
-                            <Text style={{fontWeight: 'bold'}}>{rowData['guest'].firstName} {rowData['guest'].lastName}</Text>
-                            <View style={styles.inlineBlocks}>
-                                <Icon name='calendar' size={15} style={styles.icon}/>
-                                <Text
-                                numberOfLines={1}>{rowData['request'].startingDate.getDate() + ' ' + monthNames[rowData['request'].startingDate.getMonth()]} au {rowData['request'].endingDate.getDate() + ' ' + monthNames[rowData['request'].endingDate.getMonth()]}</Text>
-                            </View>
-                            <View style={styles.inlineBlocks}>
-                                <Icon name='users' size={15} style={styles.icon}/>
-                                <Text
-                                numberOfLines={1}>{nbGuest}</Text>
-                            </View>
-                        </View>
-                        <View>
-                            <Icon name='angle-right'size={45} style={styles.chevronRight}/>
-                        </View>
-                    </View>
+                  <TouchableHighlight underlayColor='#dddddd' 
+                    onPress={() => this.onHostingRequestPressed(rowData)}>
+                    {this.renderHostingRow(rowData)}
                   </TouchableHighlight>
                 </View>
                 <View style={styles.separator}/>
@@ -315,7 +324,7 @@ class Calendar extends React.Component {
         );
     }
 
-    render(){
+    render(){        
         return (
             <View style={styles.container}>
                 <CalendarComponent
@@ -323,7 +332,7 @@ class Calendar extends React.Component {
                 dayHeadings={['D', 'L', 'M', 'M', 'J', 'V', 'S']}               // Default: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
                 eventDates={this.state.eventDates}       // Optional array of moment() parseable dates that will show an event indicator
                 events={this.state.eventDates} // Optional array of event objects with a date property and custom styles for the event indicator
-                monthNames={['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']}// Defaults to english names of months
+                monthNames={DateFormat.getLongMonths()}// Defaults to english names of months
                 nextButtonText={<Icon name='chevron-right' color="#fff" size={20}/>}           // Text for next button. Default: 'Next'
                 onDateSelect={(date) => this.onDateSelected(date)} // Callback after date selection
                 onSwipeNext={this.onSwipeNext}    // Callback for forward swipe event
@@ -354,7 +363,7 @@ class Calendar extends React.Component {
                             <Image style={styles.circle} source={{uri: this.state.profilePicture}}/> 
                             <View>
                                 <Text style={{fontSize: 18}}>{this.state.firstName} {this.state.lastName}</Text>
-                                <Text>{this.state.age} ans </Text>
+                                <Text>{this.state.age} ans</Text>
                             </View>
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
@@ -366,7 +375,7 @@ class Calendar extends React.Component {
                         </View>
                         <View style={[styles.inlineBlocks, styles.lineDetails]}>
                             <Icon name="users" size={28} style={[styles.icon, {marginLeft: 15}]} />
-                            <Text>{this.state.nbGuests}</Text>
+                            <Text>{this.state.nbGuests} voyageur(s)</Text>
                         </View>
                         <View>
                             <Text>Message de {this.state.firstName}</Text>
