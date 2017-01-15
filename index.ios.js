@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 
 const scenes = Actions.create(
     <Scene key="root" backButtonImage={require('./resources/back_button.png')}>
-      <Scene key="login" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Login} initial title="Connexion"/>
+      <Scene key="login" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Login} initial title="Connexion" hideNavBar/>
       <Scene key="register" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Register} title="Inscription"/>
       <Scene key="tabbar">
         <Scene key="main" tabs tabBarStyle={styles.tabBarStyle}>
