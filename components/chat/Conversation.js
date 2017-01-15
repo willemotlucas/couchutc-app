@@ -60,7 +60,6 @@ class Conversation extends React.Component {
 		this._isMounted = true;
 		let messages = realm.objects('Message').sorted('sendAt', 'asc');
 		var conversation = this.getMessagesOfConversation(messages, this.state.interlocutor.id);
-		console.log(this.state.interlocutor.id);
 		conversation = this.formatData(conversation);
 	    this.setState({
 			messages: conversation
@@ -87,7 +86,7 @@ class Conversation extends React.Component {
 		var userInterlocutor = this.formatUserData(this.state.interlocutor);
 		var currentUser = this.formatUserData(currentUserData);
 		Object.keys(conversation).forEach(function (key) {
-			var user;
+			var user = null;
 			if (conversation[key].from_user_id == currentUserData.id) {
 				user = currentUser;
 			} else {
@@ -102,6 +101,7 @@ class Conversation extends React.Component {
 			cpt = cpt + 1;
 
 		});
+		console.log(dataForList);
 		return dataForList;
 	}
 
@@ -178,8 +178,8 @@ class Conversation extends React.Component {
 	          createdAt: new Date(),
 	          user: {
 	            _id: 2,
-	            name: 'React Native',
-	            avatar: 'https://facebook.github.io/react/img/logo_og.png',
+	            name: this.state.interlocutor.firstName + ' ' + this.state.interlocutor.lastName,
+	            avatar: this.state.interlocutor.profilePicture.value,
 	          },
 	        }),
 	      };
@@ -220,7 +220,7 @@ class Conversation extends React.Component {
 		        messages={this.state.messages}
 		        onSend={this.onSend}
 		        user={{
-		          _id: 1,
+		          _id: this.state.currentUser.id
 		        }}
 		        renderFooter={this.renderFooter}
 		      	/>
