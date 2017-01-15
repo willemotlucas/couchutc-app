@@ -48,6 +48,7 @@ var styles = StyleSheet.create({
     inlineBlocks: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 3
     },
     icon: {
         marginRight: 10
@@ -72,6 +73,9 @@ var styles = StyleSheet.create({
         width: 310,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    row : {
+        padding: 10
     }
 });
 
@@ -261,7 +265,7 @@ class Requests extends React.Component {
                                 </View>
                                 <View style={styles.inlineBlocks}>
                                     <Icon name="users" size={15} style={styles.icon}/>
-                                    <Text>{rowData['request'].numberOfGuest} voyageurs</Text>
+                                    <Text>{rowData['request'].numberOfGuest} voyageur(s)</Text>
                                 </View>
                             </View>
                             {receivedPicture}
