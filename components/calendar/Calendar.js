@@ -122,10 +122,10 @@ var calendarStyles = StyleSheet.create({
 });
 
 var monthNames = [
-    "Jan", "Fev", "Mar",
-    "Avr", "Mai", "Juin", "Juil",
-    "Aout", "Sept", "Oct",
-    "Nov", "Dec"
+    "Janvier", "Février", "Mars",
+    "Avril", "Mai", "Juin", "Juillet",
+    "Août", "Septembre", "Octobre",
+    "Novembre", "Décembre"
 ];
 
 const singleGuest = "1 voyageur";
