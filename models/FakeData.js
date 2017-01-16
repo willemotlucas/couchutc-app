@@ -4,22 +4,10 @@ const FakeData = {
 
 	writeHostingRequests: function() {
 		const hostingRequests = [
-			{
-	        	id: 1,
-	        	startingDate: new Date('2017-01-01'),
-			    endingDate: new Date('2017-01-03'),
-			    numberOfGuest: 1,
-			    message: 'Je voudrais visiter cette ville',
-			    status: 'accepted',
-			    createdAt: new Date(),
-			    updatedAt: new Date(),
-			    guest_id: 1,
-			    host_id: 3
-	    	},
 	    	{
 	    		id: 2,
-			    startingDate: new Date('2017-01-4'),
-			    endingDate: new Date('2017-01-5'),
+			    startingDate: new Date('2017-01-04'),
+			    endingDate: new Date('2017-01-05'),
 			    numberOfGuest: 2,
 			    message: 'Je viens rendre visite à des amis',
 			    status: 'accepted',
@@ -40,18 +28,6 @@ const FakeData = {
 			    guest_id: 3,
 			    host_id: 1
 	    	},
-	    	{
-	        	id: 4,
-	        	startingDate: new Date('2017-02-14'),
-			    endingDate: new Date('2017-02-17'),
-			    numberOfGuest: 1,
-			    message: 'Ne pas passer à autre status',
-			    status: 'pending',
-			    createdAt: new Date(),
-			    updatedAt: new Date(),
-			    guest_id: 2,
-			    host_id: 1
-	    	},
 			{
 	        	id: 5,
 	        	startingDate: new Date('2017-02-23'),
@@ -69,7 +45,7 @@ const FakeData = {
 	        	startingDate: new Date('2017-02-27'),
 			    endingDate: new Date('2017-02-28'),
 			    numberOfGuest: 1,
-			    message: 'La piscine sera-t-elle disponible?',
+			    message: 'La piscine sera-t-elle disponible ?',
 			    status: 'pending',
 			    createdAt: new Date(),
 			    updatedAt: new Date(),
@@ -81,7 +57,7 @@ const FakeData = {
 	        	startingDate: new Date('2017-03-04'),
 			    endingDate: new Date('2017-02-09'),
 			    numberOfGuest: 2,
-			    message: 'Peut-on invité des amis?',
+			    message: 'Peut-on inviter des amis ?',
 			    status: 'accepted',
 			    createdAt: new Date(),
 			    updatedAt: new Date(),
@@ -94,7 +70,7 @@ const FakeData = {
 			    endingDate: new Date('2017-01-15'),
 			    numberOfGuest: 1,
 			    message: 'Salut',
-			    status: 'accepted',
+			    status: 'pending',
 			    createdAt: new Date(),
 			    updatedAt: new Date(),
 			    guest_id: 2,
@@ -111,7 +87,7 @@ const FakeData = {
 			    updatedAt: new Date(),
 			    guest_id: 6,
 			    host_id: 2
-	    	},
+	    	}
 		];
 
         realm.write(() => {
@@ -373,41 +349,23 @@ const FakeData = {
 
 	writeMessages: function() {
 		const messages = [
-			{
-	        	id: 1,
-			    sendAt: new Date('2016-01-20'),
-			    message: 'Coucou, je voulais des infos',
-			    createdAt: new Date('2016-01-20'),
-			    updatedAt: new Date('2016-01-20'),
-			    from_user_id: 1,
-			    to_user_id: 3
-	    	},
-	    	{
-	    		id: 2,
-			    sendAt: new Date('2016-01-21'),
-			    message: 'Salut, que veux-tu savoir ?',
-			    createdAt: new Date('2016-01-21'),
-			    updatedAt: new Date('2016-01-21'),
+    		{
+	    		id: 3,
+			    sendAt: new Date('2017-01-17'),
+			    message: "Très bien et toi ? Merci d'avoir accepté ma demande :)",
+			    createdAt: new Date('2017-01-18'),
+			    updatedAt: new Date('2017-01-18'),
 			    from_user_id: 3,
 			    to_user_id: 1
     		},
     		{
-	    		id: 3,
-			    sendAt: new Date('2016-01-21'),
-			    message: 'Salut, tu vas bien ?',
-			    createdAt: new Date('2016-01-21'),
-			    updatedAt: new Date('2016-01-21'),
-			    from_user_id: 2,
-			    to_user_id: 1
-    		},
-    		{
 	    		id: 4,
-			    sendAt: new Date('2016-01-21'),
-			    message: 'Salut, que veux-tu savoir de plus ?',
-			    createdAt: new Date('2016-01-21'),
-			    updatedAt: new Date('2016-01-21'),
+			    sendAt: new Date('2017-01-17'),
+			    message: "Salut ! Tu vas bien ?",
+			    createdAt: new Date('2017-01-17'),
+			    updatedAt: new Date('2017-01-17'),
 			    from_user_id: 1,
-			    to_user_id: 2
+			    to_user_id: 3
     		}
 		];
 

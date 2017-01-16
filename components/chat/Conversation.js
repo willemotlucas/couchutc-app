@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 //demo answers
-const answers = 'Ok très bien, c\'est parfait ! Je serai la pour vous accueilllir';
+const answers = 'Ok très bien, c\'est parfait ! Je serai là pour t\'accueillir';
 
 class Conversation extends React.Component {
 	constructor(props) {
