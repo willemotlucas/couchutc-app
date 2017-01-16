@@ -132,6 +132,9 @@ class Requests extends React.Component {
             displayModalButtons: true,
             requestSent: false
         };
+
+        this.getDataForList = this.getDataForList.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     getDataForList() {
