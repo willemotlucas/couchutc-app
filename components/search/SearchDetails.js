@@ -51,12 +51,14 @@ var styles = StyleSheet.create({
         marginTop: 15,
         height: 350,
         width: 350,
+        borderRadius: 10
     },
     modalInnerContainer: {
         backgroundColor: '#fff', 
         marginTop: 50,
         paddingLeft: 20,
         paddingRight: 20,
+        borderRadius: 10
     },
     inlineBlocks: {
         flexDirection: 'row',

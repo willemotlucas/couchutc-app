@@ -32,8 +32,7 @@ const styles = StyleSheet.create({
 });
 
 //demo answers
-var counter = 0;
-const answers = ['Oui bien sur, je serais la pour vous accueilllir', 'pas de problème'];
+const answers = 'Ok très bien, c\'est parfait ! Je serai la pour vous accueilllir';
 
 class Conversation extends React.Component {
 	constructor(props) {
@@ -101,7 +100,6 @@ class Conversation extends React.Component {
 			cpt = cpt + 1;
 
 		});
-		console.log(dataForList);
 		return dataForList;
 	}
 
@@ -142,7 +140,7 @@ class Conversation extends React.Component {
   	}
 
   	answerDemo(messages) {
-	    if (messages.length > 0) {
+	    if (messages.length > 0 && messages[0].text.slice(0, 8) == "Vers 17h") {
 	      if ((messages[0].image || messages[0].location) || !this._isAlright) {
 	        this.setState((previousState) => {
 	          return {
@@ -154,10 +152,9 @@ class Conversation extends React.Component {
 
 	    setTimeout(() => {
 	      	if (this._isMounted === true) {
-		        if (messages.length > 0) {
-         	 		this.onReceive(answers[counter]);
-         	 		this.saveMessage(answers[counter], this.state.interlocutor.id, this.state.currentUser.id);
-         	 		counter= counter + 1;
+		        if (messages.length > 0 && messages[0].text.slice(0, 8) == "Vers 17h") {
+         	 		this.onReceive(answers);
+         	 		this.saveMessage(answers, this.state.interlocutor.id, this.state.currentUser.id);
         		}
       		}
 
