@@ -103,7 +103,8 @@ class Requests extends React.Component {
         super(props);
 
         var dataForList = this.getDataForList();
-        var currentUser = realm.objects('AuthenticatedUser')[0].id;
+        var currentUserId = realm.objects('AuthenticatedUser')[0].id;
+        var currentUser = realm.objects('User').filtered(`id = ${currentUserId}`)[0];
         var dataSource = new ListView.DataSource(
           {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
         this.state = {
@@ -124,11 +125,12 @@ class Requests extends React.Component {
             isDisabled: false,
             swipeToClose: true,
             sliderValue: 0.3,
-            currentUserId: currentUser,
+            currentUser: currentUser,
             visible: false,
             messageToast: '',
             profilePicture: '',
-            displayModalButtons: true
+            displayModalButtons: true,
+            requestSent: false
         };
     }
 
@@ -159,9 +161,9 @@ class Requests extends React.Component {
         return dataForList;
     }
 
-    onHostingRequestPressed(id, firstName, lastName, age, requestId, startingDate, endingDate, nbGuests, message, profilePicture) {
+    onHostingRequestPressed(id, firstName, lastName, age, requestId, startingDate, endingDate, nbGuests, message, profilePicture, requestSent) {
         var host_id = realm.objects('HostingRequest').filtered(`id = ${requestId}`)[0].host_id;
-        if(host_id === this.state.currentUserId){
+        if(host_id === this.state.currentUser.id){
             this.setState({displayModalButtons: true});
         } else {
             this.setState({displayModalButtons: false});
@@ -177,7 +179,8 @@ class Requests extends React.Component {
             endingDate: endingDate.getDate() + ' ' + monthNames[endingDate.getMonth()],
             nbGuests: nbGuests,
             message: message,
-            profilePicture: profilePicture
+            profilePicture: profilePicture,
+            requestSent: requestSent
         });
 
         this.refs.detailsRequest.open();
@@ -230,7 +233,7 @@ class Requests extends React.Component {
 
     renderRow(rowData, sectionID, rowID) {
         var receivedPicture = null;
-        if (rowData['request'].guest_id === this.state.currentUserId) {
+        if (rowData['request'].guest_id === this.state.currentUser.id) {
             receivedPicture = <MaterialIcons name='call-made' size={40} style={{color: '#00A799', position: 'absolute', right: 10, top: 15}}/>
         } else {
             receivedPicture = <MaterialIcons name='call-received' size={40} style={{color: '#F94351', position: 'absolute', right: 10, top: 15}}/>;
@@ -249,7 +252,8 @@ class Requests extends React.Component {
                     rowData['request'].endingDate,
                     rowData['request'].numberOfGuest,
                     rowData['request'].message,
-                    rowData['user'].profilePicture.value
+                    rowData['user'].profilePicture.value,
+                    (rowData['request'].guest_id == this.state.currentUser.id) ? true : false
                     )}
                     underlayColor='#dddddd'>
                         <View style={styles.requestRow}>
@@ -323,7 +327,7 @@ class Requests extends React.Component {
                             <Text>{this.state.nbGuests} voyageurs</Text>
                         </View>
                         <View>
-                            <Text>Message de {this.state.firstName}</Text>
+                            <Text>Message de {this.state.requestSent ? this.state.currentUser.firstName : this.state.firstName}</Text>
                             <Text style={styles.borderedText} numberOfLines={6}>
                             {this.state.message}</Text>
                         </View>
