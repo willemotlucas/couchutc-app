@@ -1,7 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet} from "react-native";
 import {Actions} from "react-native-router-flux";
+import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
 
+import CustomTabBar from '../common/CustomTabBar';
+import User from './User';
+import Home from './Home';
+import realm from '../../models/realm'
 var styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -9,23 +14,24 @@ var styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#F5FCFF",
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: "center",
-        margin: 10,
-    },
-    instructions: {
-        textAlign: "center",
-        color: "#333333",
-        marginBottom: 5,
-    },
+    navbar: {
+        paddingTop: 20,
+        backgroundColor: "#009286"
+    }
 });
 
 class Profile extends React.Component {
     render(){
+        var currentUserId = realm.objects('AuthenticatedUser')[0].id;
+
         return (
             <View style={styles.container}>
-                <Text>Profile page</Text>
+                <View style={styles.navbar}>
+                    <ScrollableTabView prerenderingSiblingsNumber={1} renderTabBar={() => <CustomTabBar/>}>
+                        <User tabLabel="Profil" user={currentUserId} />
+                        <Home tabLabel="Hébergement" user={currentUserId}/>
+                    </ScrollableTabView>
+                </View>
             </View>
         );
     }

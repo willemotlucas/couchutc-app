@@ -1,24 +1,17 @@
 import Realm from 'realm';
 
-const HomeSchema = {
+export default class Home extends Realm.Object { }
+Home.schema = {
   name: 'Home',
   properties: {
-  	id: 'int',
+    id: 'int',
     country: 'string',
     city: 'string',
     propertyType: 'string',
     sleepingAccomodation: 'string',
     maxGuestNumber: 'int',
     createdAt: 'date',
-    updatedAt: 'date'
+    updatedAt: 'date',
+    photos: {type: 'list', objectType: 'Image'}
   }
 };
-
-class Home {
-
-}
-
-Home.schema = HomeSchema;
-
-
-module.exports = Home;

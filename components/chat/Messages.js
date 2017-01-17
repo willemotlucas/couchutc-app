@@ -2,8 +2,11 @@ import React from 'react';
 import {View, Text, StyleSheet} from "react-native";
 import {Actions} from "react-native-router-flux";
 import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
+
+import CustomTabBar from '../common/CustomTabBar';
 import Requests from './Requests';
 import Chat from './Chat';
+import Conversation from './Conversation';
 
 var styles = StyleSheet.create({
     container: {
@@ -11,18 +14,28 @@ var styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#F5FCFF",
-        marginTop: 50
+    },
+    navbar: {
+        paddingTop: 20,
+        backgroundColor: "#009286"
     }
 });
 
 class Messages extends React.Component {
+    constructor(props) {
+      super(props);
+
+    }
+
     render(){
         return (
             <View style={styles.container}>
-                <ScrollableTabView renderTabBar={() => <DefaultTabBar inactiveTextColor="white" activeTextColor="white" backgroundColor="#00A799" tabBarUnderlineStyle={{color: "white"}}/>}>
-                    <Chat tabLabel="Conversations" />
-                    <Requests tabLabel="Demandes" />
-                </ScrollableTabView>
+                <View style={styles.navbar}>
+                    <ScrollableTabView prerenderingSiblingsNumber={1} renderTabBar={() => <CustomTabBar/>}>
+                        <Chat tabLabel="Conversations" refresh={true}/>
+                        <Requests tabLabel="Demandes" />
+                    </ScrollableTabView>
+                </View>
             </View>
         );
     }

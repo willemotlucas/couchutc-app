@@ -17,34 +17,30 @@ var styles = StyleSheet.create({
     label: {
         fontSize: 20,
         color: 'white',
-        marginRight: 40
+        marginRight: 40,
+        paddingTop: 9
     },
     number: {
         fontSize: 25,
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        paddingTop: 7,
+        width: 25
     },
     button: {
-        paddingBottom: 20,
+
     },
-    saveButton: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
+    end: {
+        alignItems: 'flex-end',
         height: 40,
-        backgroundColor: '#009286',
         color: 'white',
         fontSize: 20,
         borderWidth: 1,
         borderColor: 'white',
         borderRadius: 5,
-        padding: 10,
-        marginLeft: 10,
-        marginRight: 10,
-        paddingTop: 10
-    },
+        paddingTop: 5,
+        margin: 10
+    }
 });
 
 class SearchNumberGuest extends React.Component {
@@ -78,13 +74,17 @@ class SearchNumberGuest extends React.Component {
     render(){
         return (
             <View style={styles.modalContainer}>
-                <View style={styles.viewContainer}>
-                    <Text style={styles.label}>Nombre de voyageurs</Text>
-                    <Icon.Button style={styles.button} name="minus-circle" size={30} backgroundColor="#009286" onPress={this.onMinusButtonPress}/>
-                    <Text style={styles.number}>{this.state.numberOfGuest}</Text>
-                    <Icon.Button style={styles.button} name="plus-circle" size={30} backgroundColor="#009286" onPress={this.onPlusButtonPress}/>
+                <View style={{flex: 0.9}}>
+                    <View style={styles.viewContainer}>
+                        <Text style={styles.label}>Nombre de voyageurs</Text>
+                        <Icon.Button style={styles.button} name="minus-circle" size={30} backgroundColor="#009286" onPress={this.onMinusButtonPress}/>
+                        <Text style={styles.number}>{this.state.numberOfGuest}</Text>
+                        <Icon.Button style={styles.button} name="plus-circle" size={30} backgroundColor="#009286" onPress={this.onPlusButtonPress}/>
+                    </View>
                 </View>
-                <Button style={styles.saveButton} onPress={this.onSaveButtonPress}>Sauvegarder</Button>
+                <View style={{flex: 0.1}}>
+                    <Button style={styles.end} onPress={this.onSaveButtonPress}>Valider</Button>
+                </View>
             </View>
         );
     }

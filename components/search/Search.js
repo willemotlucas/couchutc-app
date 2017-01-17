@@ -4,11 +4,13 @@ import {Actions} from "react-native-router-flux";
 import Button from "react-native-button";
 import NavigationBar from "react-native-navbar";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Toast from 'react-native-root-toast';
 
 import SearchCity from './SearchCity';
 import SearchDate from './SearchDate';
 import SearchNumberGuest from './SearchNumberGuest';
 import SearchResults from './SearchResults';
+import DateFormat from '../common/DateFormat';
 
 var defaultBackgroundColor = "#009286"
 
@@ -24,7 +26,7 @@ var styles = StyleSheet.create({
     },
     searchContainer: {
         backgroundColor: defaultBackgroundColor,
-        marginTop: 50,
+        marginTop: 50
     },
     searchButtons: {
         margin: 10,
@@ -36,9 +38,18 @@ var styles = StyleSheet.create({
         backgroundColor: defaultBackgroundColor,
         color: 'white',
         height: 40,
+        paddingTop: 7
     },
     searchText : {
         color: 'white'
+    },
+    end: {
+        alignItems: 'flex-end',
+        height: 50,
+        color: 'white',
+        fontSize: 20,
+        paddingTop: 7,
+        marginTop: 30
     }
 });
 
@@ -56,7 +67,9 @@ class Search extends React.Component {
             pickedEndDate: null,
             numberOfGuestString: '1 voyageur',
             numberOfGuest: 1,
-            renderResults: false
+            renderResults: false,
+            messageToast: '',
+            visible: false
         }
 
         this.setSearchCityModalVisible = this.setSearchCityModalVisible.bind(this);
@@ -67,6 +80,7 @@ class Search extends React.Component {
         this.handleNumberOfGuest = this.handleNumberOfGuest.bind(this);
         this.toggleRenderResults = this.toggleRenderResults.bind(this);
         this.onSearchButtonPress = this.onSearchButtonPress.bind(this);
+        this.displayToast = this.displayToast.bind(this);
     }
 
     setSearchCityModalVisible(visible) {
@@ -98,13 +112,12 @@ class Search extends React.Component {
     }
 
     handlePickedDate(startDate, endDate) {
-        var dateOptions = {day: 'numeric', month: 'short'};
-        var pickedDate = startDate.toLocaleDateString('fr', dateOptions) + ' - ' + endDate.toLocaleDateString('fr', dateOptions);
+        const dateString = DateFormat.getDateInShortString(startDate) + ' - ' + DateFormat.getDateInShortString(endDate);
 
         this.setState({
             pickedStartDate: startDate,
             pickedEndDate: endDate,
-            pickedDate: pickedDate
+            pickedDate: dateString
         })
     }
 
@@ -125,6 +138,8 @@ class Search extends React.Component {
     onSearchButtonPress() {
         if(this.state.searchCity != 'Chercher une ville' && this.state.pickedStartDate != null && this.state.pickedEndDate != null){
             this.toggleRenderResults();
+        } else {
+            this.displayToast('Veuillez compléter tous les critères de recherche');
         }
     }
 
@@ -134,16 +149,28 @@ class Search extends React.Component {
         this.setState({renderResults: !this.state.renderResults});
     }
 
+    displayToast(message) {
+        setTimeout(() => this.setState({
+            visible: true,
+            messageToast: message
+        }), 300); // show toast after 1s
+
+        setTimeout(() => this.setState({
+            visible: false,
+            messageToast: ""
+        }), 4000); // hide toast after 5s
+    }
+
     renderSearchView() {
         if(this.state.renderResults){
             return (
-                <View style={styles.searchContainer}>
-                    <Icon.Button name="search" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={this.toggleRenderResults}><Text style={styles.searchText}>{this.state.searchCity} - {this.state.pickedDate} - {this.state.numberOfGuest}</Text></Icon.Button>
+                <View style={[styles.searchContainer, {flex: 0.12}]}>
+                    <Icon.Button name="search" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={this.toggleRenderResults}><Text style={styles.searchText}>{this.state.searchCity} - {this.state.pickedDate} - {this.state.numberOfGuest} voyageur(s)</Text></Icon.Button>
                 </View>
             )
         } else {
             return (
-                <View style={styles.searchContainer}>
+                <View style={[styles.searchContainer, {flex: 0.3}]}>
                     <Icon.Button name="globe" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchCityModalVisible(true)}>{this.state.searchCity}</Icon.Button>
                     <Icon.Button name="calendar-o" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchDateModalVisible(true)}>{this.state.pickedDate}</Icon.Button>
                     <Icon.Button name="users" underlayColor={defaultBackgroundColor} backgroundColor={defaultBackgroundColor} style={styles.searchButtons} onPress={() => this.setSearchNumberGuestModalVisible(true)}>{this.state.numberOfGuestString}</Icon.Button>
@@ -160,11 +187,21 @@ class Search extends React.Component {
         }
     }
 
+    renderBlankContainer() {
+        if(!this.state.renderResults){
+            return (
+                <View style={{flex: 0.5}}>
+
+                </View>
+            );
+        }
+    }
+
     renderSearchButton() {
         if(!this.state.renderResults){
             return (
-                <View>
-                    <Button style={[styles.searchButtonAction, {bottom: this.state.btnLocation}]} onPress={this.onSearchButtonPress}>CHERCHER</Button>
+                <View style={{flex: 0.2}}>
+                    <Button style={[styles.searchButtonAction, styles.end]} onPress={this.onSearchButtonPress}>Chercher</Button>
                 </View>
             )
         }
@@ -188,7 +225,12 @@ class Search extends React.Component {
 
                 {this.renderSearchView()}
                 {this.renderResults()}
+                {this.renderBlankContainer()}
                 {this.renderSearchButton()}
+
+                <Toast visible={this.state.visible} position={-105} shadow={false} animation={true} hideOnPress={true}>
+                    {this.state.messageToast}
+                </Toast>
             </View>
         );
     }

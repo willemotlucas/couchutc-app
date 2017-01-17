@@ -6,15 +6,16 @@
 
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View } from 'react-native';
-import {Scene, Router, Actions, Modal} from 'react-native-router-flux';
+import {Scene, Router, Actions, Modal, ActionConst} from 'react-native-router-flux';
 
 import Login from './components/login/Login';
 import Register from './components/signup/Register';
 import Search from './components/search/Search';
-import SearchCity from './components/search/SearchCity';
+import SearchDetails from './components/search/SearchDetails';
 import Profile from './components/profile/Profile';
 import Calendar from './components/calendar/Calendar';
 import Messages from './components/chat/Messages';
+import Conversation from './components/chat/Conversation';
 import TabView from './components/common/TabView';
 import TabIcon from './components/common/TabIcon';
 
@@ -39,28 +40,34 @@ const styles = StyleSheet.create({
 });
 
 const scenes = Actions.create(
-  <Scene key="modal" component={Modal}>
-    <Scene key="root">
-      <Scene key="login" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Login} initial title="Connexion"/>
+    <Scene key="root" backButtonImage={require('./resources/back_button.png')}>
+      <Scene key="login" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Login} initial title="Connexion" hideNavBar/>
       <Scene key="register" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} component={Register} title="Inscription"/>
       <Scene key="tabbar">
         <Scene key="main" tabs tabBarStyle={styles.tabBarStyle}>
           <Scene key="calendar" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Calendar} title="Calendrier"/>
-          <Scene key="search" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Search} title="Rechercher" initial={true}/>
-          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil"/>
-          <Scene key="messages" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Messages} title="Messages"/>
-        </Scene>
+          <Scene key="search" navigationBarStyle={styles.navigationBarStyle} backButtonImage={require('./resources/back_button.png')} title="Rechercher" initial={true} titleStyle={styles.titleStyle} icon={TabIcon}>
+            <Scene key="search_home" component={Search} title="Rechercher"/>
+            <Scene key="search_details" hideTabBar component={SearchDetails} title="Détails du logement"/>
+          </Scene> 
+          <Scene key="profile" navigationBarStyle={styles.navigationBarStyle} titleStyle={styles.titleStyle} icon={TabIcon} component={Profile} title="Profil" hideNavBar/>
+          <Scene key="messages" navigationBarStyle={styles.navigationBarStyle} title="Messages" titleStyle={styles.titleStyle} icon={TabIcon} leftButtonIconStyle ={{ tintColor:'white'}}>
+            <Scene key="message_home" component={Messages} title="Messages" hideNavBar/>
+            <Scene key="message_details" hideTabBar component={Conversation} title="Détails" hideNavBar={false}/>
+          </Scene>
+        </Scene>        
       </Scene>
     </Scene>
-  </Scene>
 );
 
-export default class CouchUTC extends Component {
+export default class CouchUTC extends Component {  
   render() {
     return (
       <Router scenes={scenes}/>
     );
   }
 }
+
+console.disableYellowBox = true;
 
 AppRegistry.registerComponent('CouchUTC', () => CouchUTC);

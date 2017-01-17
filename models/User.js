@@ -1,14 +1,21 @@
 import Realm from 'realm';
 
-const UserSchema = {
+export default class User extends Realm.Object { 
+  age() {
+    return Math.floor(Math.floor((Date.now() - this.birthday.getTime())) / 31557600000);
+  }
+}
+
+User.schema = {
   name: 'User',
+  primaryKey: 'id',
   properties: {
-  	id: 'int',
+    id: 'int',
     firstName: 'string',
     lastName: 'string',
     birthday: 'date',
     gender: 'string',
-    profilePicture: {type: 'data', optional: true},
+    profilePicture: {type: 'Image', optional: true},
     biography: 'string',
     visitedCountries: 'string',
     smoker: 'bool',
@@ -17,17 +24,8 @@ const UserSchema = {
     phoneNumber: 'string',
     createdAt: 'date',
     updatedAt: 'date',
-    home: 'Home'
+    home: 'Home',
+    mail:'string',
+    password:'string'
   }
 };
-
-class User {
-	age() {
-		return Math.floor(Math.floor((Date.now() - this.birthday.getTime())) / 31557600000);
-	}
-}
-
-User.schema = UserSchema;
-
-
-module.exports = User;
